@@ -1,0 +1,139 @@
+<!--
+  ~ This file is part of UCLan-THC server.
+  ~
+  ~     UCLan-THC server is free software: you can redistribute it and/or
+  ~     modify it under the terms of the GNU General Public License as
+  ~     published by the Free Software Foundation, either version 3 of
+  ~     the License, or (at your option) any later version.
+  ~
+  ~     UCLan-THC server is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="../uclan_thc.css">
+        <title>API Guide - currentQuestion</title>
+    </head>
+
+    <body>
+
+        <div style="background-image: url(../background_stripes.png); height: 158px; margin-bottom:0;">
+            <div style="width:800px;margin:0 auto;padding-top:70px;padding-bottom:10px;">
+                <div style="margin-left: 10px; float: left;">
+                    <a href="http://uclan-thc.appspot.com">
+                        <img alt="University of Central Lancashire (UCLan)"
+                             align="left"
+                             src="../uclan.png"/></a>
+                    <h1>Treasure Hunt Challenge</h1>
+
+                </div>
+            </div>
+        </div>
+
+        <div style="width:800px;margin:0 auto;padding-top:20px;padding-bottom:10px;padding-right:10px;a link: #99cc00">
+
+            <p>
+                <a href="/guide" class="uclan_btn">Back to overview</a>
+            </p>
+
+            <h2>API Guide: currentQuestion</h2>
+
+            <h3>Usage</h3>
+
+            <p>
+                Retrieves the current question for the specified session.
+                The returned data include the <i>ID</i> of the question, the
+                <i>text of the question</i>, and whether the question requires a <i>location</i> to be answered.
+            </p>
+
+            <p>URL format:<table style="text-align:left; width: 760px;"><tr><td><b>
+                <pre>http://uclan-thc.appspot.com/api/csv/currentQuestion</pre>
+            </b></td></tr></table></p>
+            <h3>Parameters</h3>
+            <ul>
+                <li><b>session</b>: the session ID, typically retrieved after calling <a href="/guide/startQuiz.html">startQuiz</a></li>
+            </ul>
+
+            <h3>Possible outcomes</h3>
+            <ul>
+                <li>
+                    <i>When</i>: Everything OK <br/>
+                    <i>Status</i>: "OK", Message: "" <br/>
+                    <i>Second line</i>: The question text for the current question (possibly HTML formatted) <br/>
+                    <i>Third line</i>: Whether the question is location-dependent (true|false) <br/>
+                    Example:
+                      <pre>
+    OK,
+    What is the value of &lt;b&gt;1+1&lt;/b&gt;?
+    false</pre>
+                </li>
+                <li>
+                    <i>When</i>: There are no more questions to be answered (could be a new session, but an empty category) <br/>
+                    <i>Status</i>: "Finished session", Message: "The specified session has no more questions" <br/>
+                    Example:
+                      <pre>
+    Finished session,The specified session has no more questions</pre>
+                </li>
+                <li>
+                    <i>When</i>: One or more parameters are missing <br/>
+                    <i>Status</i>: "Invalid or missing parameters", Message: "Valid parameter list 'currentQuestion?session=...'" <br/>
+                    Example:
+                      <pre>
+    Invalid or missing parameters,Valid parameter list 'currentQuestion?session=...'</pre>
+                </li>
+                <li>
+                    <i>When</i>: The session is unknown <br/>
+                    <i>Status</i>: "Unknown session", Message: "The specified session ID could not be found" <br/>
+                    Example:
+                      <pre>
+    Unknown session,The specified session ID could not be found</pre>
+                </li>
+            </ul>
+
+            <hr/>
+            <h3>Example</h3>
+            <p>Issuing this URL</p>
+            <table style="text-align:left; width: 760px;"><tr><td>
+                <pre>
+http://uclan-thc.appspot.com/api/csv/currentQuestion?\
+                    session=agtzfnVjbGFuLXRoY3IUCxIHU2Vzc2lvbhiAgICAgOe8CQw
+                </pre>
+            </td></tr></table>
+
+            <br/>
+            returns
+            <table style="text-align:left; width: 760px;"><tr><td>
+                <pre>
+OK,
+What is 1+1?
+false</pre>
+            </td></tr></table>
+
+            <p>Alternatively, some questions might be of multiple-choice form in which case they will start with 'MCQ' and the correct answer will be either 'A', or 'B', or 'C', or 'D', like below:</p>
+            <br/>
+            returns
+            <table style="text-align:left; width: 760px;"><tr><td>
+                <pre>
+OK,
+MCQ: What is the first program everyone learns when they start programming? &lt;br&gt;A: Hello \
+                    You&lt;br&gt;B: Hello Me&lt;br&gt;C: Hello World&lt;br&gt;D: None of these
+false</pre>
+            </td></tr></table>
+
+            <hr/>
+            <p>
+                <a target="_blank" href="http://uclan-thc.appspot.com/api/csv/currentQuestion?session=agtzfnVjbGFuLXRoY3IUCxIHU2Vzc2lvbhiAgICAgOe8CQw" class="uclan_btn">Try it out</a>
+            </p>
+
+        </div>
+
+    </body>
+
+</html>

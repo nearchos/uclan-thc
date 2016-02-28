@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This file is part of UCLan-THC server.
+  ~
+  ~     UCLan-THC server is free software: you can redistribute it and/or
+  ~     modify it under the terms of the GNU General Public License as
+  ~     published by the Free Software Foundation, either version 3 of
+  ~     the License, or (at your option) any later version.
+  ~
+  ~     UCLan-THC server is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+          http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+           version="2.5">
+
+    <!--CSV API-->
+    <servlet>
+        <servlet-name>GetCategories</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.csv.GetCategories</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetCategories</servlet-name>
+        <url-pattern>/api/csv/categories</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>StartQuiz</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.csv.GetStartQuiz</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>StartQuiz</servlet-name>
+        <url-pattern>/api/csv/startQuiz</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetUpdateLocation</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.csv.GetUpdateLocation</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetUpdateLocation</servlet-name>
+        <url-pattern>/api/csv/updateLocation</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetCurrentQuestion</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.csv.GetCurrentQuestion</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetCurrentQuestion</servlet-name>
+        <url-pattern>/api/csv/currentQuestion</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetAnswerQuestion</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.csv.GetAnswerQuestion</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetAnswerQuestion</servlet-name>
+        <url-pattern>/api/csv/answerQuestion</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetSkipQuestion</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.csv.GetSkipQuestion</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetSkipQuestion</servlet-name>
+        <url-pattern>/api/csv/skipQuestion</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetScore</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.csv.GetScore</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetScore</servlet-name>
+        <url-pattern>/api/csv/score</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetScoreBoard</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.csv.GetScoreBoard</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetScoreBoard</servlet-name>
+        <url-pattern>/api/csv/scoreBoard</url-pattern>
+    </servlet-mapping>
+
+    <!--end of CSV API-->
+
+    <!--JSON API-->
+
+    <servlet>
+        <servlet-name>JSON_GetAnswerQuestion</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.json.GetAnswerQuestion</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>JSON_GetAnswerQuestion</servlet-name>
+        <url-pattern>/api/json/answerQuestion</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>JSON_GetCategories</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.json.GetCategories</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>JSON_GetCategories</servlet-name>
+        <url-pattern>/api/json/categories</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>JSON_GetCurrentQuestion</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.json.GetCurrentQuestion</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>JSON_GetCurrentQuestion</servlet-name>
+        <url-pattern>/api/json/currentQuestion</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>JSON_GetScore</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.json.GetScore</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>JSON_GetScore</servlet-name>
+        <url-pattern>/api/json/score</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>JSON_GetScoreBoard</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.json.GetScoreBoard</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>JSON_GetScoreBoard</servlet-name>
+        <url-pattern>/api/json/scoreBoard</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>JSON_GetScoreBoardWithLocations</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.json.GetScoreBoardWithLocations</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>JSON_GetScoreBoardWithLocations</servlet-name>
+        <url-pattern>/api/json/scoreBoardWithLocations</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>JSON_GetSkipQuestion</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.json.GetSkipQuestion</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>JSON_GetSkipQuestion</servlet-name>
+        <url-pattern>/api/json/skipQuestion</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>JSON_GetStartQuiz</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.json.GetStartQuiz</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>JSON_GetStartQuiz</servlet-name>
+        <url-pattern>/api/json/startQuiz</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>JSON_GetUpdateLocation</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.json.GetUpdateLocation</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>JSON_GetUpdateLocation</servlet-name>
+        <url-pattern>/api/json/updateLocation</url-pattern>
+    </servlet-mapping>
+
+    <!--end of JSON API-->
+
+    <!-- Extras API-->
+    <servlet>
+        <servlet-name>ExtrasTimedQuestion</servlet-name>
+        <jsp-file>/extras/timedQuestion.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ExtrasTimedQuestion</servlet-name>
+        <url-pattern>/extras/timed-question</url-pattern>
+    </servlet-mapping>
+
+    <!-- End fo Extras API -->
+
+    <!--Admin-->
+    <servlet>
+        <servlet-name>Sessions</servlet-name>
+        <jsp-file>/admin/Sessions.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Sessions</servlet-name>
+        <url-pattern>/admin/sessions</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Categories</servlet-name>
+        <jsp-file>/admin/Categories.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Categories</servlet-name>
+        <url-pattern>/admin/categories</url-pattern>
+        <url-pattern>/admin/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Category</servlet-name>
+        <jsp-file>/admin/Category.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Category</servlet-name>
+        <url-pattern>/admin/category</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Question</servlet-name>
+        <jsp-file>/admin/Question.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Question</servlet-name>
+        <url-pattern>/admin/question</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TimedQuestion</servlet-name>
+        <jsp-file>/admin/TimedQuestion.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>TimedQuestion</servlet-name>
+        <url-pattern>/admin/timed-question</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AllTimedQuestions</servlet-name>
+        <jsp-file>/admin/TimedQuestions.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AllTimedQuestions</servlet-name>
+        <url-pattern>/admin/all-timed-questions</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AddOrEditCategory</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.admin.AddOrEditCategory</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AddOrEditCategory</servlet-name>
+        <url-pattern>/admin/add-category</url-pattern>
+        <url-pattern>/admin/edit-category</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AddOrEditQuestion</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.admin.AddOrEditQuestion</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AddOrEditQuestion</servlet-name>
+        <url-pattern>/admin/add-question</url-pattern>
+        <url-pattern>/admin/edit-question</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AddOrEditTimedQuestion</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.admin.AddOrEditTimedQuestion</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AddOrEditTimedQuestion</servlet-name>
+        <url-pattern>/admin/add-timed-question</url-pattern>
+        <url-pattern>/admin/edit-timed-question</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteEntity</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.admin.DeleteEntity</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DeleteEntity</servlet-name>
+        <url-pattern>/admin/delete-entity</url-pattern>
+    </servlet-mapping>
+
+    <!-- Fingerprinting admin -->
+
+    <servlet>
+        <servlet-name>Locations</servlet-name>
+        <jsp-file>/admin/Locations.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Locations</servlet-name>
+        <url-pattern>/admin/locations</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Location</servlet-name>
+        <jsp-file>/admin/Location.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Location</servlet-name>
+        <url-pattern>/admin/location</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Floor</servlet-name>
+        <jsp-file>/admin/Floor.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Floor</servlet-name>
+        <url-pattern>/admin/floor</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Trainings</servlet-name>
+        <jsp-file>/admin/Trainings.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Trainings</servlet-name>
+        <url-pattern>/admin/trainings</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AddOrEditLocation</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.admin.AddOrEditLocation</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AddOrEditLocation</servlet-name>
+        <url-pattern>/admin/add-location</url-pattern>
+        <url-pattern>/admin/edit-location</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AddOrEditFloor</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.admin.AddOrEditFloor</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AddOrEditFloor</servlet-name>
+        <url-pattern>/admin/add-floor</url-pattern>
+        <url-pattern>/admin/edit-floor</url-pattern>
+    </servlet-mapping>
+
+    <!--end of Admin-->
+
+    <!-- Indoor locations - Fingerprinting -->
+
+    <servlet>
+        <servlet-name>SubmitTraining</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.fingerprinting.SubmitTraining</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SubmitTraining</servlet-name>
+        <url-pattern>/api/fingerprinting/submit-training</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetEstimate</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.fingerprinting.GetEstimate</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetEstimate</servlet-name>
+        <url-pattern>/api/fingerprinting/get-estimate</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetTrainings</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.fingerprinting.GetTrainings</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetTrainings</servlet-name>
+        <url-pattern>/api/fingerprinting/get-trainings</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetLocations</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.fingerprinting.GetLocations</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetLocations</servlet-name>
+        <url-pattern>/api/fingerprinting/get-locations</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetLocation</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.api.fingerprinting.GetLocation</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetLocation</servlet-name>
+        <url-pattern>/api/fingerprinting/get-location</url-pattern>
+    </servlet-mapping>
+
+    <!-- end of Indoor locations - Fingerprinting -->
+
+    <!--Guide-->
+    <servlet>
+        <servlet-name>GuideIndex</servlet-name>
+        <jsp-file>/guide/index.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GuideIndex</servlet-name>
+        <url-pattern>/guide</url-pattern>
+    </servlet-mapping>
+    <!--end of Guide-->
+
+    <!--Security constraints-->
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/admin/*</url-pattern>
+        </web-resource-collection>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/admin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <!--End of Security constraints-->
+
+</web-app>

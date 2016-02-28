@@ -1,0 +1,138 @@
+<!--
+  ~ This file is part of UCLan-THC server.
+  ~
+  ~     UCLan-THC server is free software: you can redistribute it and/or
+  ~     modify it under the terms of the GNU General Public License as
+  ~     published by the Free Software Foundation, either version 3 of
+  ~     the License, or (at your option) any later version.
+  ~
+  ~     UCLan-THC server is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="../uclan_thc.css">
+        <title>API Guide - startQuiz</title>
+    </head>
+
+    <body>
+
+        <div style="background-image: url(../background_stripes.png); height: 158px; margin-bottom:0;">
+            <div style="width:800px;margin:0 auto;padding-top:70px;padding-bottom:10px;">
+                <div style="margin-left: 10px; float: left;">
+                    <a href="http://uclan-thc.appspot.com">
+                        <img alt="University of Central Lancashire (UCLan)"
+                             align="left"
+                             src="../uclan.png"/></a>
+                    <h1>Treasure Hunt Challenge</h1>
+
+                </div>
+            </div>
+        </div>
+
+        <div style="width:800px;margin:0 auto;padding-top:20px;padding-bottom:10px;padding-right:10px;a link: #99cc00">
+
+            <p>
+                <a href="/guide" class="uclan_btn">Back to overview</a>
+            </p>
+
+            <h2>API Guide: startQuiz</h2>
+
+            <h3>Usage</h3>
+
+            <p>
+                Initiates a new quiz session for the specified category.
+                The session is automatically created if no session is already available for the given parameters combination.
+            </p>
+
+            <p>URL format:<table style="text-align:left; width: 760px;"><tr><td><b>
+                <pre>http://uclan-thc.appspot.com/api/csv/startQuiz?playerName=...&appID=...&categoryUUID=...</pre>
+            </b></td></tr></table></p>
+            <h3>Parameters</h3>
+            <ul>
+                <li><b>playerName</b>: so it can appear on the leader board</li>
+                <li><b>appID</b>: typically, the name of your team</li>
+                <li><b>categoryUUID</b>: the UUID of a valid, active category (you can get this by using '/api/csv/categories', see <a href="/guide/categories.html">guide:categories</a>).</li>
+            </ul>
+
+            <h3>Possible outcomes</h3>
+            <ul>
+                <li>
+                    <i>When</i>: Everything OK<br/>
+                    <i>Status</i>: "OK", Message: ""<br/>
+                    <i>Second line</i>: the 'session' ID to be used in subsequent calls (e.g. in {@link GetCurrentQuestion} or GetUpdateLocation)<br/>
+                    <i>Third line</i>: the number of questions in the selected category<br/>
+                    Example:
+                      <pre>
+    OK,
+    agtzfnVjbGFuLXRoY3IUCxIHU2Vzc2lvbhiAgICAgMOVCgw
+    3</pre>
+                </li>
+                <li>
+                    <i>When</i>: One or more parameters are missing<br/>
+                    <i>Status</i>: "Invalid or missing parameters", Message: "Valid parameter list 'startQuiz?playerName=...&appID=...&categoryUUID=...'"<br/>
+                    Example:
+                      <pre>
+    Invalid or missing parameters,Valid parameter list 'startQuiz?playerName=...\
+                          &appID=...&categoryUUID=...'</pre>
+                </li>
+                <li>
+                    <i>When</i>: The category is unknown<br/>
+                    <i>Status</i>: "Unknown category ID", Message: "The specified category ID could not be found"<br/>
+                    Example:
+                      <pre>
+    Unknown category ID,The specified category ID could not be found</pre>
+                </li>
+                <li>
+                    <i>When</i>: The category is not active<br/>
+                    <i>Status</i>: "Inactive category", Message: "The specified category is not active currently"<br/>
+                    Example:
+                      <pre>
+    Inactive category,The specified category is not active right now</pre>
+                </li>
+                <li>
+                    <i>When</i>: The playerName is already in use<br/>
+                    <i>Status</i>: "Invalid playerName", Message: "The specified playerName is already in use (try a different one)"<br/>
+                    Example:
+                      <pre>
+    Invalid playerName,The specified playerName is already in use (try a different one)</pre>
+                </li>
+            </ul>
+
+            <hr/>
+            <h3>Example</h3>
+            <p>Issuing this URL
+            <table style="text-align:left; width: 760px;"><tr><td>
+                <pre>
+    http://uclan-thc.appspot.com/api/csv/startQuiz?playerName=Adam&appID=MyApp\
+                    &categoryUUID=agtzfnVjbGFuLXRoY3IVCxIIQ2F0ZWdvcnkYgICAgIC6hwoM
+                </pre>
+            </td></tr></table>
+
+            <br/>
+            returns
+            <table style="text-align:left; width: 760px;"><tr><td>
+                <pre>
+    OK,
+    agtzfnVjbGFuLXRoY3IUCxIHU2Vzc2lvbhiAgICAgMOVCgw
+    3
+                </pre>
+            </td></tr></table>
+            </p>
+            <hr/>
+            <p>
+                <a target="_blank" href="http://uclan-thc.appspot.com/api/csv/startQuiz?playerName=Adam&appID=MyApp&categoryUUID=agtzfnVjbGFuLXRoY3IVCxIIQ2F0ZWdvcnkYgICAgIC6hwoM" class="uclan_btn">Try it out</a>
+            </p>
+
+        </div>
+
+    </body>
+
+</html>

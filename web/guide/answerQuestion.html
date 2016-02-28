@@ -1,0 +1,146 @@
+<!--
+  ~ This file is part of UCLan-THC server.
+  ~
+  ~     UCLan-THC server is free software: you can redistribute it and/or
+  ~     modify it under the terms of the GNU General Public License as
+  ~     published by the Free Software Foundation, either version 3 of
+  ~     the License, or (at your option) any later version.
+  ~
+  ~     UCLan-THC server is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="../uclan_thc.css">
+        <title>API Guide - answerQuestion</title>
+    </head>
+
+    <body>
+
+        <div style="background-image: url(../background_stripes.png); height: 158px; margin-bottom:0;">
+            <div style="width:800px;margin:0 auto;padding-top:70px;padding-bottom:10px;">
+                <div style="margin-left: 10px; float: left;">
+                    <a href="http://uclan-thc.appspot.com">
+                        <img alt="University of Central Lancashire (UCLan)"
+                             align="left"
+                             src="../uclan.png"/></a>
+                    <h1>Treasure Hunt Challenge</h1>
+
+                </div>
+            </div>
+        </div>
+
+        <div style="width:800px;margin:0 auto;padding-top:20px;padding-bottom:10px;padding-right:10px;a link: #99cc00">
+
+            <p>
+                <a href="/guide" class="uclan_btn">Back to overview</a>
+            </p>
+
+            <h2>API Guide: answerQuestion</h2>
+
+            <h3>Usage</h3>
+
+            <p>
+                Submits a proposed answer for the current question. If the question is location-sensitive, you need
+                to use the <a href="/guide/updateLocation.html">updateLocation</a> API call first to update the location.
+                A correct answer is rewarded with +10 points.
+            </p>
+
+            <p>URL format:<table style="text-align:left; width: 760px;"><tr><td><b>
+                <pre>http://uclan-thc.appspot.com/api/csv/answerQuestion?answer=...&session=...</pre>
+            </b></td></tr></table></p>
+            <h3>Parameters</h3>
+            <ul>
+                <li><b>session</b>: the session ID, typically retrieved after calling <a href="/guide/startQuiz.html">startQuiz</a></li>
+                <li><b>answer</b>: the proposed answer</li>
+            </ul>
+
+            <h3>Possible outcomes</h3>
+            <ul>
+                <li>
+                    <i>When</i>: Answer is correct & More questions available <br/>
+                    <i>Status</i>: "OK", Message: "" <br/>
+                    <i>Followed by</i>: "correct,unfinished" <br/>
+                    Example:
+                      <pre>
+    OK,
+    correct,unfinished</pre>
+                </li>
+                <li>
+                    <i>When</i>: Answer is correct & No more questions available (finished all questions in category) <br/>
+                    <i>Status</i>: "OK", Message: "" <br/>
+                    <i>Followed by</i>: "correct,finished" <br/>
+                    Example:
+                      <pre>
+    OK,
+    correct,finished</pre>
+                </li>
+                <li>
+                    <i>When</i>: Answer is incorrect <br/>
+                    <i>Status</i>: "OK", Message: "" <br/>
+                    <i>Followed by</i>: "incorrect" <br/>
+                    Example:
+                      <pre>
+    OK,
+    incorrect</pre>
+                </li>
+                <li>
+                    <i>When</i>: Answer is correct BUT the location is unknown or incorrect <br/>
+                    <i>Status</i>: "OK", Message: "" <br/>
+                    <i>Followed by</i>: "unknown or incorrect location" <br/>
+                    Example:
+                      <pre>
+    OK,
+    unknown or incorrect location</pre>
+                </li>
+                <li>
+                    <i>When</i>: One or more parameters are missing <br/>
+                    <i>Status</i>: "Invalid or missing parameters", Message: "Valid parameter list 'answerQuestion?answer=...&session=...'" <br/>
+                    Example:
+                      <pre>
+    Invalid or missing parameters,Valid parameter list \
+                          'answerQuestion?answer=...&session=...'</pre>
+                </li>
+                <li>
+                    <i>When</i>: The session is unknown <br/>
+                    <i>Status</i>: "Unknown session", Message: "The specified session ID could not be found" <br/>
+                    Example:
+                      <pre>
+    Unknown session,The specified session ID could not be found</pre>
+                </li>
+            </ul>
+
+            <hr/>
+            <h3>Example</h3>
+            <p>Issuing this URL
+            <table style="text-align:left; width: 760px;"><tr><td>
+                <pre>
+http://uclan-thc.appspot.com/api/csv/answerQuestion?answer=2\
+                    &session=agtzfnVjbGFuLXRoY3IUCxIHU2Vzc2lvbhiAgICAgMOVCgw</pre>
+            </td></tr></table>
+
+            <br/>
+            returns
+            <table style="text-align:left; width: 760px;"><tr><td>
+                <pre>
+OK,
+correct,unfinished</pre>
+            </td></tr></table>
+            </p>
+            <hr/>
+            <p>
+                <a target="_blank" href="http://uclan-thc.appspot.com/api/csv/answerQuestion?answer=2&session=agtzfnVjbGFuLXRoY3IUCxIHU2Vzc2lvbhiAgICAgMOVCgw" class="uclan_btn">Try it out</a>
+            </p>
+
+        </div>
+
+    </body>
+
+</html>
