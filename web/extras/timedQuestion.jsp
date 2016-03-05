@@ -1,15 +1,17 @@
+<%@ page import="java.util.Date" %>
 <%@ page import="com.google.appengine.api.users.User" %>
 <%@ page import="com.google.appengine.api.users.UserService" %>
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
-<%@ page import="uk.ac.uclan.thc.data.UserEntity" %>
+<%@ page import="uk.ac.uclan.thc.model.TimedQuestion" %>
 <%@ page import="uk.ac.uclan.thc.data.TimedQuestionFactory" %>
 <%@ page import="uk.ac.uclan.thc.model.Category" %>
-<%@ page import="java.util.Date" %>
+<%@ page import="uk.ac.uclan.thc.data.CategoryFactory" %>
 <%--
   Created by IntelliJ IDEA.
   User: Nearchos Paspallis
   Date: 26/10/2015
   Time: 07:46
+  To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -21,58 +23,52 @@
   <body>
 
   <%
-    final UserService userService = UserServiceFactory.getUserService();
-    final User user = userService.getCurrentUser();
-    final String userEmail = user == null ? "Unknown" : user.getEmail();
-    UserEntity userEntity = null;
-    if (user == null)
-    {
+        final String key = request.getParameter("uuid");
+        final TimedQuestion timedQuestion = key != null ? TimedQuestionFactory.getTimedQuestion(key) : null;
+        final Category category = timedQuestion == null ? null : CategoryFactory.getCategory(timedQuestion.getCategoryUUID());
+
+        if(timedQuestion == null || category == null)
+        {
   %>
-  <p>You can <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">sign in</a> to administrate this service.</p>
+
+  <p><b>Unknown or invalid path/uuid</b></p>
+
   <%
-    }
-    else
-    {
-      userEntity = UserEntity.getUserEntity(user.getEmail());
-      if(userEntity == null)
-      {
-        userEntity = UserEntity.setUserEntity(user.getEmail(), user.getNickname(), false, false);
-      }
+        }
+        else if(System.currentTimeMillis() < category.getValidFrom())
+        {
   %>
-  <span><img src="../favicon.png" alt="UCLan"/> Logged in as: <%= user.getNickname() %> <b> <%= userEntity.isAdmin() ? "(admin)" : "" %> </b> [<a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">sign out</a>]</span>
+
+  <p><b>The selected question is not active yet.</b></p>
+  <p>It will become active at: <%= category.getValidFromAsString() %> [UTC (Coordinated Universal Time)]</p>
+
   <%
-      if(userEntity.isAdmin())
-      {
-          final long now = System.currentTimeMillis();
+        }
+        else if(System.currentTimeMillis() > category.getValidUntil())
+        {
   %>
-  <form action="/extras/submit-question" method="post" onsubmit="submitButton.disabled = true; return true;">
-      <table>
-          <tr>
-              <td>TITLE</td>
-              <td><input type="text" name="<%= TimedQuestionFactory.PROPERTY_TITLE%>" required/></td>
-          </tr>
-          <tr>
-              <td>CREATED BY</td>
-              <td><%= userEmail %></td>
-          </tr>
-          <tr>
-              <td>CATEGORY</td>
-              <td><input type="datetime-local" name="<%= TimedQuestionFactory.PROPERTY_CATEGORY_UUID%>" value="<%= Category.SIMPLE_DATE_FORMAT.format(new Date(now)) %>"/></td>
-          </tr>
-          <tr>
-              <td>BODY</td>
-              <td><input type="datetime-local" name="<%= TimedQuestionFactory.PROPERTY_BODY%>" required/></td>
-          </tr>
-          <tr>
-              <td>IMAGE_URL</td>
-              <td><input type="text" name="<%= TimedQuestionFactory.PROPERTY_IMAGE_URL%>"/></td>
-          </tr>
-      </table>
-      <div><input type="submit" name="submitButton" value="Add question" /></div>
-  </form>
+
+  <p><b>The selected question is not active anymore.</b></p>
+  <p>It was active until: <%= category.getValidUntilAsString() %> [UTC (Coordinated Universal Time)]</p>
+
   <%
-      }
-    }
+        }
+        else // active
+        {
+          final String imageUrl = timedQuestion != null ? timedQuestion.getImageUrl() : null;
+  %>
+
+  <p><b><%= timedQuestion.getTitle() %></b></p>
+  <p><%= timedQuestion.getBody() %></p>
+
+  <%
+          if(imageUrl != null && imageUrl.length() > 0)
+          {
+  %>
+  <img src="<%= imageUrl %>"/>
+  <%
+          }
+        }
   %>
 
   </body>
