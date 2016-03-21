@@ -35,8 +35,10 @@
 package uk.ac.uclan.thc.api.json;
 
 import uk.ac.uclan.thc.api.Protocol;
+import uk.ac.uclan.thc.data.CategoryFactory;
 import uk.ac.uclan.thc.data.QuestionFactory;
 import uk.ac.uclan.thc.data.SessionFactory;
+import uk.ac.uclan.thc.model.Category;
 import uk.ac.uclan.thc.model.Question;
 import uk.ac.uclan.thc.model.Session;
 
@@ -82,23 +84,33 @@ public class GetCurrentQuestion extends HttpServlet
             }
             else
             {
-                final String currentQuestionUUID = session.getCurrentQuestionUUID();
-                if(currentQuestionUUID.isEmpty())
+                final Category category = CategoryFactory.getCategory(session.getCategoryUUID());
+                if(category != null && !category.isActiveNow())
                 {
                     // ignore reply builder, and output the error status/message and terminate
-                    printWriter.println(Protocol.getJsonStatus("Finished session", "The specified session has no more questions"));
+                    printWriter.println(Protocol.getJsonStatus("Inactive category", "The specified category is not active"));
                 }
                 else
                 {
-                    final Question question = QuestionFactory.getQuestion(currentQuestionUUID);
+                    final String currentQuestionUUID = session.getCurrentQuestionUUID();
+                    if(currentQuestionUUID.isEmpty())
+                    {
+                        // ignore reply builder, and output the error status/message and terminate
+                        printWriter.println(Protocol.getJsonStatus("Finished session", "The specified session has no more questions"));
+                    }
+                    else
+                    {
+                        final Question question = QuestionFactory.getQuestion(currentQuestionUUID);
+                        assert question != null;
 
-                    final StringBuilder reply = new StringBuilder("{").append(EOL);
-                    reply.append("  \"status\": \"OK\"").append(",").append(EOL); // OK status
-                    reply.append("  \"question\": \"").append(question.getText()).append("\",").append(EOL); // OK status
-                    reply.append("  \"isLocationRelevant\": ").append(question.isLocationRelevant()).append(EOL); // OK status
-                    reply.append("}").append(EOL);
+                        final StringBuilder reply = new StringBuilder("{").append(EOL);
+                        reply.append("  \"status\": \"OK\"").append(",").append(EOL); // OK status
+                        reply.append("  \"question\": \"").append(question.getText()).append("\",").append(EOL); // OK status
+                        reply.append("  \"isLocationRelevant\": ").append(question.isLocationRelevant()).append(EOL); // OK status
+                        reply.append("}").append(EOL);
 
-                    printWriter.println(reply.toString()); // normal JSON output
+                        printWriter.println(reply.toString()); // normal JSON output
+                    }
                 }
             }
         }

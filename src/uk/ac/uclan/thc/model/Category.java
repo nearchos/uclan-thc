@@ -67,6 +67,12 @@ public class Category implements Serializable
         return validFrom;
     }
 
+    public boolean hasFinished()
+    {
+        final long now = System.currentTimeMillis();
+        return now > validUntil;
+    }
+
     public long getValidUntil() // todo investigate if this is used or not
     {
         return validUntil;

@@ -30,7 +30,6 @@ import uk.ac.uclan.thc.model.Session;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletException;
@@ -80,54 +79,63 @@ public class GetAnswerQuestion extends HttpServlet
             }
             else
             {
-                final String currentQuestionUUID = session.getCurrentQuestionUUID();
-                final Question currentQuestion = QuestionFactory.getQuestion(currentQuestionUUID);
-                final String correctAnswer = currentQuestion.getCorrectAnswer().trim();
-
-                final StringBuilder reply = new StringBuilder("{").append(EOL);
-                reply.append("  \"status\": \"OK\"").append(",").append(EOL); // OK status
-
-                final String feedback;
-
-                // first check if the answer is correct
-                if(!checkAnswer(answer, correctAnswer, session))
+                final Category category = CategoryFactory.getCategory(session.getCategoryUUID());
+                if(category != null && !category.isActiveNow())
                 {
-                    SessionFactory.updateScoreAndKeepSessionToSameQuestion(sessionUUID, currentQuestion.getWrongScore());
-                    feedback = "incorrect";
+                    // ignore reply builder, and output the error status/message and terminate
+                    printWriter.println(Protocol.getJsonStatus("Inactive category", "The specified category is not active"));
                 }
-                else // answer is correct
+                else
                 {
-                    // check the location
-                    final LocationFingerprint lastLocationFingerprint = LocationFingerprintFactory.getLastLocationFingerprintBySessionUUID(sessionUUID);
-                    if(!currentQuestion.isCorrectLocation(lastLocationFingerprint))
+                    final String currentQuestionUUID = session.getCurrentQuestionUUID();
+                    final Question currentQuestion = QuestionFactory.getQuestion(currentQuestionUUID);
+                    assert currentQuestion != null;
+                    final String correctAnswer = currentQuestion.getCorrectAnswer().trim();
+
+                    final StringBuilder reply = new StringBuilder("{").append(EOL);
+                    reply.append("  \"status\": \"OK\"").append(",").append(EOL); // OK status
+
+                    final String feedback;
+
+                    // first check if the answer is correct
+                    if(!checkAnswer(answer, correctAnswer, session))
                     {
                         SessionFactory.updateScoreAndKeepSessionToSameQuestion(sessionUUID, currentQuestion.getWrongScore());
-                        feedback = "unknown or incorrect location";
+                        feedback = "incorrect";
                     }
-                    else
+                    else // answer is correct
                     {
-                        // correct answer and location. check if this was the last question or not
-                        final boolean hasMoreQuestions = SessionFactory.updateScoreAndProgressSessionToNextQuestion(sessionUUID, currentQuestion.getCorrectScore());
-                        if(hasMoreQuestions) // unfinished
+                        // check the location
+                        final LocationFingerprint lastLocationFingerprint = LocationFingerprintFactory.getLastLocationFingerprintBySessionUUID(sessionUUID);
+                        if(!currentQuestion.isCorrectLocation(lastLocationFingerprint))
                         {
-                            feedback = "correct,unfinished";
+                            SessionFactory.updateScoreAndKeepSessionToSameQuestion(sessionUUID, currentQuestion.getWrongScore());
+                            feedback = "unknown or incorrect location";
                         }
-                        else // finished
+                        else
                         {
-                            feedback = "correct,finished";
-                            Category category = CategoryFactory.getCategory(session.getCategoryUUID());
-                            final Session finishedSession = SessionFactory.getSession(sessionUUID);
-                            if(category != null && finishedSession != null) {
-                                sendEmail(finishedSession.getPlayerName(), finishedSession.getName1(), finishedSession.getEmail1(), category.getName(), finishedSession.getScore(), finishedSession.getFinishTime());
+                            // correct answer and location. check if this was the last question or not
+                            final boolean hasMoreQuestions = SessionFactory.updateScoreAndProgressSessionToNextQuestion(sessionUUID, currentQuestion.getCorrectScore());
+                            if(hasMoreQuestions) // unfinished
+                            {
+                                feedback = "correct,unfinished";
+                            }
+                            else // finished
+                            {
+                                feedback = "correct,finished";
+                                final Session finishedSession = SessionFactory.getSession(sessionUUID);
+                                if(category != null && finishedSession != null) {
+                                    sendEmail(finishedSession.getPlayerName(), finishedSession.getName1(), finishedSession.getEmail1(), category.getName(), finishedSession.getScore(), finishedSession.getFinishTime());
+                                }
                             }
                         }
                     }
+
+                    reply.append("  \"feedback\": \"").append(feedback).append("\"").append(EOL); // OK status
+                    reply.append("}").append(EOL);
+
+                    printWriter.println(reply.toString()); // normal JSON output
                 }
-
-                reply.append("  \"feedback\": \"").append(feedback).append("\"").append(EOL); // OK status
-                reply.append("}").append(EOL);
-
-                printWriter.println(reply.toString()); // normal JSON output
             }
         }
     }

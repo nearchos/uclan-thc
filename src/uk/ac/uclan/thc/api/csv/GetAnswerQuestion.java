@@ -144,6 +144,7 @@ public class GetAnswerQuestion extends HttpServlet
                 // first check if the answer is correct
                 if(!answer.equalsIgnoreCase(correctAnswer))
                 {
+                    SessionFactory.updateScoreAndKeepSessionToSameQuestion(sessionUUID, currentQuestion.getWrongScore());
                     reply.append("incorrect");
                 }
                 else // answer is correct

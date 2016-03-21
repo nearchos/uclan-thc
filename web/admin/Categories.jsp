@@ -85,14 +85,15 @@ You are not logged in!
             for(final Category category : categories)
             {
                 int numOfQuestions = QuestionFactory.getAllQuestionsForCategoryOrderedBySeqNumber(category.getUUID()).size();
+                final String categoryColor = category.isActiveNow() ? "green" : category.hasFinished() ? "red" : "blue";
     %>
     <tr>
         <td><a href="/admin/category?uuid=<%= category.getUUID() %>"><%= category.getUUID() %></a></td>
         <td><%= category.getName() %></td>
         <td><%= numOfQuestions %></td>
         <td><%= category.getCreatedBy() %></td>
-        <td><%= category.getValidFromAsString() %></td>
-        <td><%= category.getValidUntilAsString() %></td>
+        <td style="color:<%=categoryColor%>"><%= category.getValidFromAsString() %></td>
+        <td style="color:<%=categoryColor%>"><%= category.getValidUntilAsString() %></td>
         <td><%= category.getCode() %></td>
         <td><%= category.getLocationUUID() %></td>
         <td><%= category.isActiveNow() %></td>
