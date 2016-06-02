@@ -44,6 +44,7 @@ public class GetScoreBoard extends HttpServlet
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         response.setContentType("text/plain; charset=utf-8");
+        response.setHeader("Access-Control-Allow-Origin", "*"); // todo disable this (in all JSON requests)?
         final PrintWriter printWriter = response.getWriter();
 
         String categoryUUID = request.getParameter("categoryUUID");

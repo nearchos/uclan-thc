@@ -58,6 +58,7 @@ public class GetAnswerQuestion extends HttpServlet
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         response.setContentType("text/plain; charset=utf-8");
+        response.setHeader("Access-Control-Allow-Origin", "*"); // todo disable this (in all JSON requests)?
         final PrintWriter printWriter = response.getWriter();
 
         // if magic is specified and equals {@link MAGIC}, then show inactive categories too - used by the examiner
