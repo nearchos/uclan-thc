@@ -23,9 +23,7 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import uk.ac.uclan.thc.model.*;
 import uk.ac.uclan.thc.model.Category;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -172,8 +170,36 @@ public class SessionFactory
         return getSessionsByCategoryUUID(categoryUUID, MAX_NUM_OF_SESSIONS, sorted);
     }
 
-    static public Vector<Session> getSessionsByCategoryUUID(final String categoryUUID, final int numOfSessions, final boolean sorted)
+    static public TreeMap<Integer, Session> getSessionsByCategoryUUID(final String categoryUUID, final String playerName)
     {
+        return getSessionsByCategoryUUID(categoryUUID, MAX_NUM_OF_SESSIONS, playerName);
+    }
+
+    static private TreeMap<Integer, Session> getSessionsByCategoryUUID(final String categoryUUID, final int numOfSessions, final String playerName) {
+        final DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
+        final Query.Filter filterCategory = new Query.FilterPredicate(
+                PROPERTY_CATEGORY_UUID,
+                Query.FilterOperator.EQUAL,
+                categoryUUID);
+        final Query query = new Query(KIND);
+        query.setFilter(filterCategory);
+        query.addSort(PROPERTY_SCORE, Query.SortDirection.DESCENDING);
+        final PreparedQuery preparedQuery = datastoreService.prepare(query);
+        final TreeMap<Integer, Session> sessionsToRank = new TreeMap<>();
+        int count = 0;
+        for(final Entity entity : preparedQuery.asIterable())
+        {
+            final Session session = getFromEntity(entity);
+            if(session.getPlayerName().equals(playerName)
+                    || ++count <= numOfSessions) {
+                sessionsToRank.put(count, session);
+            }
+        }
+
+        return sessionsToRank;
+    }
+
+    static public Vector<Session> getSessionsByCategoryUUID(final String categoryUUID, final int numOfSessions, final boolean sorted) {
         final DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
         final Query.Filter filterCategory = new Query.FilterPredicate(
                 PROPERTY_CATEGORY_UUID,

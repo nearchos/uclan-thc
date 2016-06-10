@@ -165,6 +165,11 @@ public class GetAnswerQuestion extends HttpServlet
 
     private void sendEmail(final String teamName, final String name1, final String email1, final String categoryName, final long score, final long finishTime)
     {
+        if(name1 == null || name1.isEmpty() || email1 == null || email1.isEmpty()) {
+            log.warning("Could not send email. Name and/or Email were empty. Name1: " + name1 + ", Email1: " + email1);
+            return;
+        }
+
         int ftHours         = (int) (finishTime / (60 * 60 * 1000));
         int ftMinutes       = (int) ((finishTime - ftHours * 60 * 60 * 1000) / (60 * 1000));
         int ftSeconds       = (int) ((finishTime - ftHours * 60 * 60 * 1000 - ftMinutes * 60 * 1000) / 1000);

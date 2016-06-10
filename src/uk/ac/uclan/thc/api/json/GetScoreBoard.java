@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import static uk.ac.uclan.thc.api.Protocol.EOL;
@@ -48,6 +50,7 @@ public class GetScoreBoard extends HttpServlet
         final PrintWriter printWriter = response.getWriter();
 
         String categoryUUID = request.getParameter("categoryUUID");
+        String playerName = null;
         final String sessionUUID = request.getParameter("session");
         final boolean sorted = request.getParameter("sorted") != null; // just defining the parameter is sufficient
 
@@ -69,29 +72,53 @@ public class GetScoreBoard extends HttpServlet
                 else
                 {
                     categoryUUID = session.getCategoryUUID();
+                    playerName = session.getPlayerName();
                 }
             }
 
-            final Vector<Session> sessions = SessionFactory.getSessionsByCategoryUUID(categoryUUID, sorted);
+            final StringBuilder reply = new StringBuilder();
+            if(playerName == null) {
+                final Vector<Session> sessions = SessionFactory.getSessionsByCategoryUUID(categoryUUID, sorted);
 
-            final StringBuilder reply = new StringBuilder("{").append(EOL);
-            reply.append("  \"status\": \"OK\"").append(",").append(EOL); // OK status
-            reply.append("  \"message\": \"\"").append(",").append(EOL); // OK status
-            reply.append("  \"scoreBoard\": [").append(EOL); // OK status
-            for(int i = 0; i < sessions.size(); i++)
-            {
-                final Session sessionInCategory = sessions.elementAt(i);
-                reply.append("  {").append(EOL);
-                reply.append("    \"appID\": \"").append(sessionInCategory.getAppID()).append("\",").append(EOL);
-                reply.append("    \"playerName\": \"").append(sessionInCategory.getPlayerName()).append("\",").append(EOL);
-                reply.append("    \"score\": ").append(sessionInCategory.getScore()).append(",").append(EOL);
-                reply.append("    \"finishTime\": ").append(sessionInCategory.getFinishTime()).append("").append(EOL);
-                reply.append("  }").append(i < sessions.size() - 1 ? "," : "").append(EOL);
+                reply.append("{").append(EOL);
+                reply.append("  \"status\": \"OK\"").append(",").append(EOL); // OK status
+                reply.append("  \"message\": \"\"").append(",").append(EOL); // OK status
+                reply.append("  \"scoreBoard\": [").append(EOL); // OK status
+                for(int i = 0; i < sessions.size(); i++)
+                {
+                    final Session sessionInCategory = sessions.elementAt(i);
+                    reply.append("  {").append(EOL);
+                    reply.append("    \"appID\": \"").append(sessionInCategory.getAppID()).append("\",").append(EOL);
+                    reply.append("    \"playerName\": \"").append(sessionInCategory.getPlayerName()).append("\",").append(EOL);
+                    reply.append("    \"score\": ").append(sessionInCategory.getScore()).append(",").append(EOL);
+                    reply.append("    \"finishTime\": ").append(sessionInCategory.getFinishTime()).append("").append(EOL);
+                    reply.append("  }").append(i < sessions.size() - 1 ? "," : "").append(EOL);
+                }
+                reply.append("  ]").append(EOL);
+                reply.append("}").append(EOL);
+            } else {
+                final TreeMap<Integer, Session> sessionsToRank = SessionFactory.getSessionsByCategoryUUID(categoryUUID, playerName);
+
+                reply.append("{").append(EOL);
+                reply.append("  \"status\": \"OK\"").append(",").append(EOL); // OK status
+                reply.append("  \"message\": \"\"").append(",").append(EOL); // OK status
+                reply.append("  \"scoreBoard\": [").append(EOL); // OK status
+                int i = 0;
+                for(final Map.Entry<Integer, Session> entry : sessionsToRank.entrySet()) {
+
+                    reply.append("  {").append(EOL);
+                    reply.append("    \"appID\": \"").append(entry.getValue().getAppID()).append("\",").append(EOL);
+                    reply.append("    \"playerName\": \"").append(entry.getValue().getPlayerName()).append("\",").append(EOL);
+                    reply.append("    \"score\": ").append(entry.getValue().getScore()).append(",").append(EOL);
+                    reply.append("    \"finishTime\": ").append(entry.getValue().getFinishTime()).append(",").append(EOL);
+                    reply.append("    \"rank\": ").append(entry.getKey()).append("").append(EOL);
+                    reply.append("  }").append(i++ < sessionsToRank.size() - 1 ? "," : "").append(EOL);
+                }
+                reply.append("  ]").append(EOL);
+                reply.append("}").append(EOL);
             }
-            reply.append("  ]").append(EOL);
-            reply.append("}").append(EOL);
 
-            printWriter.println(reply.toString()); // normal CSV output
+            printWriter.println(reply.toString()); // normal JSON output
         }
     }
 }
