@@ -117,6 +117,11 @@
         <url-pattern>/api/json/answerQuestion</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>JSON_GetAnswerQuestion</servlet-name>
+        <url-pattern>/api/json/secure/answerQuestion</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>JSON_GetCategories</servlet-name>
         <servlet-class>uk.ac.uclan.thc.api.json.GetCategories</servlet-class>
@@ -125,6 +130,11 @@
     <servlet-mapping>
         <servlet-name>JSON_GetCategories</servlet-name>
         <url-pattern>/api/json/categories</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>JSON_GetCategories</servlet-name>
+        <url-pattern>/api/json/secure/categories</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -137,6 +147,11 @@
         <url-pattern>/api/json/currentQuestion</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>JSON_GetCurrentQuestion</servlet-name>
+        <url-pattern>/api/json/secure/currentQuestion</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>JSON_GetScore</servlet-name>
         <servlet-class>uk.ac.uclan.thc.api.json.GetScore</servlet-class>
@@ -145,6 +160,11 @@
     <servlet-mapping>
         <servlet-name>JSON_GetScore</servlet-name>
         <url-pattern>/api/json/score</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>JSON_GetScore</servlet-name>
+        <url-pattern>/api/json/secure/score</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -157,6 +177,11 @@
         <url-pattern>/api/json/scoreBoard</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>JSON_GetScoreBoard</servlet-name>
+        <url-pattern>/api/json/secure/scoreBoard</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>JSON_GetScoreBoardWithLocations</servlet-name>
         <servlet-class>uk.ac.uclan.thc.api.json.GetScoreBoardWithLocations</servlet-class>
@@ -165,6 +190,11 @@
     <servlet-mapping>
         <servlet-name>JSON_GetScoreBoardWithLocations</servlet-name>
         <url-pattern>/api/json/scoreBoardWithLocations</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>JSON_GetScoreBoardWithLocations</servlet-name>
+        <url-pattern>/api/json/secure/scoreBoardWithLocations</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -177,6 +207,11 @@
         <url-pattern>/api/json/skipQuestion</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>JSON_GetSkipQuestion</servlet-name>
+        <url-pattern>/api/json/secure/skipQuestion</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>JSON_GetStartQuiz</servlet-name>
         <servlet-class>uk.ac.uclan.thc.api.json.GetStartQuiz</servlet-class>
@@ -187,6 +222,11 @@
         <url-pattern>/api/json/startQuiz</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>JSON_GetStartQuiz</servlet-name>
+        <url-pattern>/api/json/secure/startQuiz</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>JSON_GetUpdateLocation</servlet-name>
         <servlet-class>uk.ac.uclan.thc.api.json.GetUpdateLocation</servlet-class>
@@ -195,6 +235,11 @@
     <servlet-mapping>
         <servlet-name>JSON_GetUpdateLocation</servlet-name>
         <url-pattern>/api/json/updateLocation</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>JSON_GetUpdateLocation</servlet-name>
+        <url-pattern>/api/json/secure/updateLocation</url-pattern>
     </servlet-mapping>
 
     <!--end of JSON API-->
@@ -453,6 +498,7 @@
     <security-constraint>
         <web-resource-collection>
             <url-pattern>/admin/*</url-pattern>
+            <url-pattern>/api/json/secure</url-pattern>
         </web-resource-collection>
         <user-data-constraint>
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>

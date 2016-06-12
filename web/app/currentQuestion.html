@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Treasure Hunt</title>
+<link href="style/thc-style.css" rel="stylesheet" type="text/css"/>
+<script src="js/cookies.js"> </script>
+<script src="js/utilities.js"> </script>
+<script src="js/getScoreboard.js"></script> 
+</head>
+
+<body onload="updateQuestion(); getScoreboardAsPopup();">
+
+<div id="questionContainer" class="container" style="display:none">
+
+    <ul class="topNav">
+    <!--<li><a onClick="window.history.back();" href="#">&#10094;</a></li>-->
+    <img src="images/pirate_android_small_WithTitle.png" class="topNavImage" alt="Code Cyprus Image"/>
+      <li style="float:right"><a id="displayScoreboard" onClick="showModal('scoreboardPopup');" href="#">Scoreboard</a></li>
+      <div class="clearFloat"></div>
+    </ul>
+    
+     <ul class="scoreBanner">
+       <li style="float:right">
+      	<form name="skipForm" id="skipForm">
+			<input id="skipBtn" class="THCButton" name="skipBtn" type="button" value="Skip" onClick="skipQuestion()" />
+		</form>
+      </li>
+      <li style="float:right"><p style="float:left; font-weight:700;"><b>Score:</b></p> <p id="score">0</p><div class="clearFloat"></p></li>
+      <li style="float:left">
+      	   <script>
+				var playerName = getCookie("THCWebApp-playerName");
+				var sessionID = getCookie("THCWebApp-sessionID");
+				document.write("<p id='playerName'> <b>Player: </b><small>" + playerName + "</small></p>");
+			</script>
+      </li>
+    </ul>
+
+
+    
+    <script src="js/updateLocation.js"></script>
+    <script src="js/answerQuestion.js"></script>
+    
+    	
+    <div class="content" align="center">
+        
+     <div class="instructions">
+     	<div class="bubble">
+        <img src="images/pirate_android_small.png" alt="Pirate Image" id="questionsPirateImage" />
+        <p id="question"></p><div class="clearFloat"></div>
+        </div><!--bubble-->
+    </div><!--instructions-->
+        
+
+<form name="mcqForm" id="mcqForm">
+	<input id="answerABtn" name="answerABtn" type="button" value="A" class="THCButton MCQ" onclick="answerQuestionMCQ('A')"/>
+    <input id="answerBBtn" name="answerBtn" type="button" value="B" class="THCButton MCQ" onclick="answerQuestionMCQ('B')"/>
+    <input id="answerCBtn" name="answerCBtn" type="button" value="C" class="THCButton MCQ" onclick="answerQuestionMCQ('C')"/>
+    <input id="answerDBtn" name="answerDBtn" type="button" value="D" class="THCButton MCQ" onclick="answerQuestionMCQ('D')"/>
+</form>
+
+<form name="textForm" id="textForm" onsubmit="answerQuestionTxt()">
+	<input id="answer"  type="text" name="answer" placeholder="Answer here..." size="30" class="text" required/>
+    <input id="submitBtn" class="THCButton" name="submitBtn" type="button" value="Submit" onClick="answerQuestionTxt();"/>
+</form>
+
+     	<!-- Scorebaord pop-up -->
+<div id="scoreboardPopup" class="modal">
+  <div class="modal-content animate-top card-8">
+    <header class="modalContainer hasBackground"> 
+      <span onclick="hideModal('scoreboardPopup');"
+      class="closebtn">&times;</span>
+      <h2>Scoreboard</h2>
+    </header>
+    <div class="modalContainer">
+    	<div class="container">
+        	<ol id="scoreboardList"> </ol>
+        </div>
+    </div>
+  </div>
+</div>
+
+	</div>
+
+</div> <!--CONTAINER-->
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link href="style/thc-style.css" rel="stylesheet" type="text/css"/>
+<title>Scoreboard</title>
+<script src="js/utilities.js"></script>
+<script> var sessionID = fetchGetVariable("sessionID"); </script>
+<script src="js/cookies.js"></script>
+<script src="js/getScoreboard.js"></script> 
+</head>
+
+<body onload="getScoreboard();">
+
+<div class="container" align='center'>
+
+    <ul class="topNav">
+    <li><a onClick="window.history.back();" href="#">&#10094;</a></li>
+    <img src="images/pirate_android_small_WithTitle.png" class="topNavImage" alt="Code Cyprus Image" />
+      <li style="float:right"><a href="index.html">Play Again</a></li>
+      <div class="clearFloat"></div>
+    </ul>
+
+<h1> Scoreboard </h1>
+
+<ol id="scoreboardList"> </ol>
+
+</div> <!--CONTAINER-->
+
+</body>
+</html>

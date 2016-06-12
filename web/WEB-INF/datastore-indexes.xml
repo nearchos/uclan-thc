@@ -21,6 +21,7 @@
     <datastore-index kind="Session" ancestor="false" source="manual">
         <property name="category_uuid" direction="asc"/>
         <property name="score" direction="desc"/>
+        <property name="finish_time" direction="asc"/>
     </datastore-index>
 
     <datastore-index kind="Category" ancestor="false" source="manual">

@@ -1,0 +1,32 @@
+<script src="js/cookies.js"></script>
+<script src="js/utilities.js"></script>
+
+<script>
+
+	var categoryUUID = fetchGetVariable("categoryUUID");
+	var categoryName = fetchGetVariable("categoryName");
+	var playerName = fetchGetVariable("firstPirateName");
+	var appID = "THC-WebApp";
+
+	var xhttp = new XMLHttpRequest();
+  	xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+		var jsonData = JSON.parse(xhttp.responseText);
+		var statusItem = jsonData.status;
+		if (statusItem == "OK") {
+			var sessionID = jsonData.sessionUUID;
+			setCookie("THCWebApp-sessionID", sessionID, 365);
+			setCookie("THCWebApp-playerName", playerName, 365); 
+			window.location.href = "currentQuestion.html";
+		}//end if OK
+		else if (statusItem != "OK") {
+			alert(jsonData.status + " " + jsonData.message);
+			window.location.href = "register.html?cuuid=" + categoryUUID + "&cname=" + categoryName;
+		}//end if not OK
+		else alert("Unexpected error - " + statusItem);
+    }//end if ready
+  	};//end if function()
+  	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/startQuiz?playerName=" + playerName + "&appID=" + appID + "&categoryUUID=" + categoryUUID, true);
+  	xhttp.send();
+
+</script>

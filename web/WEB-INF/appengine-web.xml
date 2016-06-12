@@ -28,4 +28,13 @@
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
     </system-properties>
 
+    <!-- Plain files -->
+    <static-files>
+        <include path="/app/**" />
+        <include path="/robots.txt" />
+        <include path="/uclan.png" />
+        <include path="/favicon.png" />
+        <include path="/uclan_thc.css" />
+    </static-files>
+
 </appengine-web-app>
