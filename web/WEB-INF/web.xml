@@ -362,6 +362,16 @@
         <url-pattern>/admin/delete-entity</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>DeleteAllSessions</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.admin.DeleteAllSessions</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DeleteAllSessions</servlet-name>
+        <url-pattern>/admin/delete-all-sessions</url-pattern>
+    </servlet-mapping>
+
     <!-- Fingerprinting admin -->
 
     <servlet>

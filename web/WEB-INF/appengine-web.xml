@@ -35,6 +35,8 @@
         <include path="/uclan.png" />
         <include path="/favicon.png" />
         <include path="/uclan_thc.css" />
+        <include path="/guide/*.html" />
+        <include path="/live/*.html" />
     </static-files>
 
 </appengine-web-app>

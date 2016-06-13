@@ -1,9 +1,25 @@
+<!------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+	File Name: 
+		scoreboard.html
+	Created by: 
+		Nicos Kasenides (nkasenides@uclan.ac.uk / hfnovember@hotmail.com) 
+		For InSPIRE - UCLan Cyprus
+		June 2016
+	Description:
+		Shows the scoreboard after the user has finished the quiz.
+--------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------->
+
+
+
 <!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <link href="style/thc-style.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" href="images/pirate_android_small.png">
 <title>Scoreboard</title>
 <script src="js/utilities.js"></script>
 <script> var sessionID = fetchGetVariable("sessionID"); </script>
@@ -13,14 +29,22 @@
 
 <body onload="getScoreboard();">
 
-<div class="container" align='center'>
+<div id="loader"></div>
 
+<div id="container" align='center'>
+
+<div class="header">
     <ul class="topNav">
-    <li><a onClick="window.history.back();" href="#">&#10094;</a></li>
     <img src="images/pirate_android_small_WithTitle.png" class="topNavImage" alt="Code Cyprus Image" />
-      <li style="float:right"><a href="index.html">Play Again</a></li>
+      <li style="float:right"><a href="index.html">Play Again &#10095;</a></li>
+      <li style="float:right"><a onclick="location.reload();">&#8634;</a></li>
       <div class="clearFloat"></div>
     </ul>
+</div>
+
+<hr/>
+<p id="message" style="font-weight:700"></p>
+<hr/>
 
 <h1> Scoreboard </h1>
 

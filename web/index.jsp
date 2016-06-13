@@ -59,7 +59,7 @@
 
             <p>
                 This project is open-source, and its code is available for cloning from
-                <a href="https://github.com/nearchos/uclan-tch">GitHub</a> under the
+                <a href="https://github.com/nearchos/uclan-thc">GitHub</a> under the
                 <a href="http://www.gnu.org/licenses/lgpl.html">LGPL</a> license.
                 Please contact npaspallis at uclan point ac dot uk for feedback or questions.
             </p>

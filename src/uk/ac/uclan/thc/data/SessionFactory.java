@@ -191,9 +191,10 @@ public class SessionFactory
         int count = 0;
         for(final Entity entity : preparedQuery.asIterable())
         {
+            count++;
             final Session session = getFromEntity(entity);
             if(session.getPlayerName().equals(playerName)
-                    || ++count <= numOfSessions) {
+                    || count <= numOfSessions) {
                 sessionsToRank.put(count, session);
             }
         }

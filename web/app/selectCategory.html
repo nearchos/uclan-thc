@@ -1,23 +1,43 @@
+<!------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+	File Name: 
+		selectCategory.html
+	Created by: 
+		Nicos Kasenides (nkasenides@uclan.ac.uk / hfnovember@hotmail.com) 
+		For InSPIRE - UCLan Cyprus
+		June 2016
+	Description:
+		Allows a user to select a quiz category from a given list.
+--------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------->
+
+
+
 <!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
 <title>Select a Category</title>
 <link href="style/thc-style.css" type="text/css" rel="stylesheet"/>
+<link rel="icon" href="images/pirate_android_small.png">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
 </head>
 
 <body>
 
+<div id="loader"></div>
+
 <div id="container">
 
-    <ul class="topNav">
-    <li><a onClick="window.history.back();" href="#">&#10094;</a></li>
-    <img src="images/pirate_android_small_WithTitle.png" class="topNavImage" alt="Code Cyprus Image" />
-      <li style="float:right"><a href="selectCategory.html">Refresh</a></li>
-      <div class="clearFloat"></div>
-    </ul>
+	<div class="header">
+        <ul class="topNav">
+        <li><a onClick="window.history.back();" href="#">&#10094;</a></li>
+        <img src="images/pirate_android_small_WithTitle.png" class="topNavImage" alt="Code Cyprus Image" />
+          <li style="float:right"><a href="selectCategory.html">Refresh &#8634;</a></li>
+          <div class="clearFloat"></div>
+        </ul>
+    </div>
     
      <div id="content" align="center">
     
@@ -69,6 +89,8 @@
 		}//end if OK
 		else if (statusItem != "OK") showToast(jsonData.status + " " + jsonData.message);
 		else showToast(jsonData.status + " - " + jsonData.message);
+		document.getElementById("loader").style.display = "none";
+		document.getElementById("container").style.display = "block";
     }
   	};
   	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/categories", true);

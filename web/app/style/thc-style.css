@@ -1,3 +1,23 @@
+/********************************************************************************
+ ********************************************************************************
+	File Name: 
+		thc-style.css
+	Created by: 
+		Nicos Kasenides (nkasenides@uclan.ac.uk / hfnovember@hotmail.com) 
+		For InSPIRE - UCLan Cyprus
+		June 2016
+	Description:
+		Contains styling for the Treasure Hunt Web App.
+*********************************************************************************		
+*********************************************************************************/
+
+
+
+
+/********************************************************************************
+								BASIC STYLING
+*********************************************************************************/
+
 @charset "utf-8";
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,greek,greek-ext);
 
@@ -13,16 +33,20 @@ body {
 	font-family: 'Roboto', sans-serif;
 }
 
-.clearFloat {
-	clear:both;	
+.clearFloat { clear:both; }
+
+#container {
+	display:none;
+	margin-top:65px;
 }
 
-.container {
-	
-}
+#question { text-align:left; }
 
-#question {
-	text-align:left;	
+/*** STICKY HEADER ***/
+.header {
+    width:100%;
+    position:fixed;
+    top:0px;
 }
 
 .bubble {
@@ -35,12 +59,80 @@ body {
 }
 
 @media only screen and (max-width: 320px) {
-    p {
-        font-size:70%;
+    p { font-size:70%; }
+}
+
+#message {
+	color:red;
+	text-decoration:blink;
+}
+
+.content { /*intentionally empty*/ }
+
+.disabled {
+	color:grey;
+	cursor:not-allowed;
+	padding:5px;
+}
+
+@media only screen and (min-width: 1024px) {
+	.disabled {
+		padding:15px;
     }
 }
 
-/************************** TOP NAV *****************************/
+#score {
+	color:orange;	
+	float:left;
+	padding-left:3px;
+}
+
+p {
+	transition:0.5s;
+	animation:ease-in;
+}
+
+/********************************************************************************
+									IMAGES
+*********************************************************************************/
+
+.pirateImage { margin:auto; }
+
+@media only screen and (max-width: 320px) {
+	.pirateImage { width:30%; }
+}
+
+@media only screen and (min-width: 1024px) {
+	.pirateImage { width:auto; }
+}
+
+#categoriesPirateImage { width:20%; }
+
+@media only screen and (min-width: 1024px) {
+	#categoriesPirateImage { width:auto; }
+}
+
+#registerPirateImage {
+	width:20%;
+	float:left;	
+}
+
+@media only screen and (min-width: 1024px) {
+	#registerPirateImage { width:auto; }
+}
+
+#questionsPirateImage {
+	width:20%;	
+	float:left;
+}
+
+@media only screen and (min-width: 1024px) {
+	#questionsPirateImage { width:auto; }
+}
+
+/********************************************************************************
+								TOP NAVIGATION BAR
+*********************************************************************************/
 
 ul.topNav {
     list-style-type: none;
@@ -57,9 +149,7 @@ ul.topNav li {
 }
 
 @media only screen and (max-width: 320px) {
-    ul.topNav li {
-        font-size:70%;
-    }
+    ul.topNav li { font-size:70%; }
 }
 
 ul.topNav li a {
@@ -72,9 +162,7 @@ ul.topNav li a {
 	font-weight:700;
 }
 
-ul.topNav li a:hover:not(.active) {
-    background-color: #8C8C8C;
-}
+ul.topNav li a:hover:not(.active) { background-color: #8C8C8C; }
 
 .topNavImage {
 	float:left;
@@ -85,7 +173,9 @@ ul.topNav li a:hover:not(.active) {
 	margin:4px;
 }
 
-/***************** SCORE BANNER *********************************/
+/********************************************************************************
+								SESSION INFO BANNER
+*********************************************************************************/
 
 ul.scoreBanner {
     list-style-type: none;
@@ -112,9 +202,7 @@ ul.scoreBanner li a {
 	font-weight:700;
 }
 
-ul.scoreBanner li a:hover:not(.active) {
-    background-color: #8C8C8C;
-}
+ul.scoreBanner li a:hover:not(.active) { background-color: #8C8C8C; }
 
 .scoreBannerImage {
 	float:left;
@@ -125,54 +213,9 @@ ul.scoreBanner li a:hover:not(.active) {
 	margin:4px;
 }
 
-/****************************************************************/
-
-.content {
-	
-}
-
-.pirateImage {
-	margin:auto;
-}
-
-@media only screen and (max-width: 320px) {
-	.pirateImage {
-		width:30%;
-    }
-}
-
-@media only screen and (min-width: 1024px) {
-	.pirateImage {
-		width:auto;
-    }
-}
-
-.disabled {
-	color:grey;
-	cursor:not-allowed;
-	padding:5px;
-}
-
-@media only screen and (min-width: 1024px) {
-	.disabled {
-		padding:15px;
-    }
-}
-
-
-#mcqForm {
-	display:none;	
-}
-
-#textForm {
-	display:none;	
-}
-
-#score {
-	color:orange;	
-	float:left;
-	padding-left:3px;
-}
+/********************************************************************************
+									BUTTONS
+*********************************************************************************/
 
 .THCButton {
 	background-color:rgba(0,0,0,0.45);
@@ -188,18 +231,12 @@ ul.scoreBanner li a:hover:not(.active) {
 	transition:1s;
 }
 
-.THCButton:hover {
-	background-color:rgba(0,0,0,0.75);	
-}
+.THCButton:hover { background-color:rgba(0,0,0,0.75); }
 
-.THCButton:active {
-	background-color:rgba(0,0,0,1);
-}
+.THCButton:active { background-color:rgba(0,0,0,1); }
 
 @media only screen and (min-width: 320px) {
-	.THCButton {
-		padding:10px;
-    }
+	.THCButton { padding:10px; }
 }
 
 @media only screen and (min-width: 1024px) {
@@ -210,9 +247,7 @@ ul.scoreBanner li a:hover:not(.active) {
 }
 
 @media only screen and (min-width: 1024px) {
-	#skipBtn {
-		padding: 10px 20px;
-	}
+	#skipBtn { padding: 10px 20px; }
 }
 
 .MCQ {
@@ -238,6 +273,12 @@ ul.scoreBanner li a:hover:not(.active) {
 	float:right;
 }
 
+/********************************************************************************
+									LISTS
+*********************************************************************************/
+
+/**** CATEGORY LISTS ****/
+
 #categoryList {
 	list-style-type:none;
 	margin: 0;
@@ -252,19 +293,13 @@ ul.scoreBanner li a:hover:not(.active) {
 }
 
 /**** Styles inactive categories ****/
-#categoryList li {
-	border-bottom: 1px solid #CFCFCF;
-}
+#categoryList li { border-bottom: 1px solid #CFCFCF; }
 
 @media only screen and (max-width: 320px) {
-	#categoryList li {
-		font-size: 80%;
-    }
+	#categoryList li { font-size: 80%; }
 }
 
-#categoryList li:last-child  {
-	border-bottom:none;
-}
+#categoryList li:last-child  { border-bottom:none; }
 
 /**** Styles active categories ****/
 #categoryList li a {
@@ -277,9 +312,7 @@ ul.scoreBanner li a:hover:not(.active) {
 }	
 
 @media only screen and (min-width: 1024px) {
-	#categoryList li a {
-		padding:15px;
-    }
+	#categoryList li a { padding:15px; }
 }
 
 #categoryList li a:hover {
@@ -292,37 +325,58 @@ ul.scoreBanner li a:hover:not(.active) {
 	color:white;	
 }
 
-#categoriesPirateImage {
-	width:20%;	
+/**** SCOREBOARD LISTS ****/
+
+#scoreboardList {
+	margin: 0;
+    padding: 0;
+    overflow: hidden;
+	width:98%;
+	margin:auto;
+	max-width:600px;
+	border-left:1px solid #CFCFCF;	
+	border-right:1px solid #CFCFCF;	
+	text-align:center;
+	list-style-type:none;
+	box-shadow:2px 2px 10px #787878;
 }
 
-@media only screen and (min-width: 1024px) {
-	#categoriesPirateImage {
-		width:auto;
-    }
-}
+#scoreboardList li { border-bottom: 1px solid #CFCFCF; }
 
-#registerPirateImage {
-	width:20%;
-	float:left;	
-}
+#scoreboardList li:first-child { border-top: 1px solid #CFCFCF; }
 
-@media only screen and (min-width: 1024px) {
-	#registerPirateImage {
-		width:auto;
-    }
-}
-
-#questionsPirateImage {
-	width:20%;	
+.rank {
 	float:left;
+	padding-left:10px;
+	font-size:150%;
+	font-weight:700;	
 }
 
-@media only screen and (min-width: 1024px) {
-	#questionsPirateImage {
-		width:auto;
-    }
+.currentPlayer { background-color:rgba(255,255,0,0.25); }
+
+@media only screen and (max-width: 320px) {
+	#scoreboardList li { font-size: 80%; }
 }
+
+.scoreBox {
+	color:white;
+	background-color: rgba(255,0,0,0.5);
+	border:2px solid red;
+	border-radius:2px;
+	display:inline;
+	float:right;
+	padding:2px;
+	margin-right:5px;
+	margin-bottom:5px;
+}
+
+.timeFinished { color:grey; }
+
+.playerName { font-weight:700; }
+
+/********************************************************************************
+									BUBBLES
+*********************************************************************************/
 
 #categoriesBubble {
 	width:60%;
@@ -345,13 +399,17 @@ ul.scoreBanner li a:hover:not(.active) {
 	margin:10px;
 }
 
-.instructions {
-	margin:5px;
-}
+.instructions { margin:5px; }
 
-#registerPiratesForm {
-	text-align:center;
-}
+/********************************************************************************
+									FORMS
+*********************************************************************************/
+
+#mcqForm { display:none; }
+
+#textForm { display:none; }
+
+#registerPiratesForm { text-align:center; }
 
 input[type=text] {
 	width:95%;	
@@ -365,9 +423,7 @@ input[type=text] {
 	max-width: 400px;
 }
 
-input:focus {
-	outline:0;	
-}
+input:focus { outline:0; }
 
 @media only screen and (min-width: 320px) {
 	input[type=text] {
@@ -397,86 +453,23 @@ input[type=email] {
     }
 }
 
-input {
-	transition:1s;
-}
+input { transition:1s; }
 
-p {
-	transition:0.5s;
-	animation:ease-in;
-}
-
-#scoreboardList {
-	margin: 0;
-    padding: 0;
-    overflow: hidden;
-	width:98%;
-	margin:auto;
-	max-width:600px;
-	border-left:1px solid #CFCFCF;	
-	border-right:1px solid #CFCFCF;	
-	text-align:center;
-}
-
-#scoreboardList li {
-	border-bottom: 1px solid #CFCFCF;
-}
-
-#scoreboardList li:first-child {
-	background-color:rgba(255,255,0,0.25);
-	border: 2px solid red;
-}
-
-@media only screen and (max-width: 320px) {
-	#scoreboardList li {
-		font-size: 80%;
-    }
-}
-
-#scoreboardList li:last-child  {
-	border-bottom:none;
-}
-
-.scoreBox {
-	color:white;
-	background-color: rgba(255,0,0,0.5);
-	border:2px solid red;
-	border-radius:2px;
-	display:inline;
-	float:right;
-	padding:2px;
-	margin-right:5px;
-	margin-bottom:5px;
-}
-
-.timeFinished {
-	color:grey;
-		
-}
-
-.playerName {
-	font-weight:700;	
-}
-
-/********************** PLACEHOLDERS ***************************/
-input::-webkit-input-placeholder {
-	font-style:italic !important;
-}
+/********************************************************************************
+								PLACEHOLDERS
+*********************************************************************************/
+input::-webkit-input-placeholder { font-style:italic !important; }
  
-input:-moz-placeholder { /* Firefox 18- */
-	font-style:italic !important;
-}
+input:-moz-placeholder { font-style:italic !important; }
  
-input::-moz-placeholder {  /* Firefox 19+ */
-	font-style:italic !important;
-}
+input::-moz-placeholder { font-style:italic !important; }
  
-input:-ms-input-placeholder {  
-	font-style:italic !important;
-}
-/***************************************************************/
+input:-ms-input-placeholder { font-style:italic !important; }
 
-/************************ MODALS *******************************/
+/********************************************************************************
+								MODALS/DIALOGS
+*********************************************************************************/
+
 .modal {
 	z-index:3;
 	display:none;
@@ -516,32 +509,28 @@ input:-ms-input-placeholder {
 		width:auto!important;
 	}
 	
-	.modal {
-		padding-top:30px;
-	}
+	.modal { padding-top:30px; }
 }
 
 @media (max-width:768px) {
-	.modal-content {
-		width:500px;
-	}
+	.modal-content { width:500px; }
 	
-	.modal {
-		padding-top:50px;
-	}
+	.modal { padding-top:50px; }
 }
 
 @media (min-width:993px) {
-	.modal-content {
-		width:900px;
-	}
+	.modal-content { width:900px; }
 }
 
-.modalContainer {
-	padding:0.01em 16px;
+.scoreboardBottomPadding { padding:0; }	
+
+@media (max-height:640px) {
+	.scoreboardBottomPadding { padding-bottom: 50px; }
 }
 
-.modalContainer:after {
+.modalContainer { padding:0.01em 16px; }
+
+.modalContainer:after { 
 	content:"";
 	display:table;
 	clear:both;
@@ -553,20 +542,51 @@ input:-ms-input-placeholder {
 
 .hasBackground {
 	color:#fff!important;
-	background-color:#00ABA3!important;
+	background-color:#636363!important;
+	border:1px solid white;
 }
-/****************************************************************/
 
-/************************ANIMATATIONS****************************/
-.animate-top{position:relative;-webkit-animation:animatetop 0.4s;animation:animatetop 0.4s}
-@-webkit-keyframes animatetop{from{top:-300px;opacity:0} to{top:0;opacity:1}}
-@keyframes animatetop{from{top:-300px;opacity:0} to{top:0;opacity:1}}
+/********************************************************************************
+									ANIMATIONS
+*********************************************************************************/
+.animate-top {
+	position:relative;
+	-webkit-animation:animatetop 0.4s;
+	animation:animatetop 0.4s
+}
 
-.closebtn {-webkit-transition:background-color .3s,color .15s,box-shadow .3s,opacity 0.3s;transition:background-color .3s,color .15s,box-shadow .3s,opacity 0.3s}
+@-webkit-keyframes animatetop {
+	from {
+		top:-300px;
+		opacity:0;
+	} 
+	
+	to {
+		top:0;
+		opacity:1;
+	}
+}
 
-/****************************************************************/
+@keyframes animatetop {
+	from {
+		top:-300px;
+		opacity:0;
+	} 
+	
+	to {
+		top:0;
+		opacity:1;
+	}
+}
 
-/******************** TOASTS/SNACKBARS **************************/
+.closebtn {
+	-webkit-transition:background-color .3s,color .15s,box-shadow .3s,opacity 0.3s;
+	transition:background-color .3s,color .15s,box-shadow .3s,opacity 0.3s
+}
+
+/********************************************************************************
+								TOASTS/SNACKBARS
+*********************************************************************************/
 
 .paper-snackbar {
   transition-property: opacity, bottom, left, right, width, margin, border-radius;
@@ -581,48 +601,35 @@ input:-ms-input-placeholder {
   align-items: center;
   color: white;
   line-height: 22px;
-  padding: 18px 24px;
+  padding: 9px 12px;
   bottom: 0px;
   opacity: 0;
-
+  text-align:center;
 }
 
 @media (min-width: 360px) {
   .paper-snackbar {
-    /*
-    Desktop:
-      Single-line snackbar height: 48 dp tall
-      Minimum width: 288 dp
-      Maximum width: 568 dp
-      2 dp rounded corner
-      Text: Roboto Regular 14 sp
-      Action button: Roboto Medium 14 sp, all-caps text
-      Default background fill: #323232 100%
-    */
-
     min-width: 288px;
     max-width: 568px;
     display: inline-flex;
     border-radius: 2px;
     margin: 24px;
     bottom: -100px;
-    
   }
 }
 
 @media (max-width: 640px) {
   .paper-snackbar {
-  /*
-  Mobile:
-    Single-line snackbar height: 48 dp
-    Multi-line snackbar height: 80 dp
-    Text: Roboto Regular 14 sp
-    Action button: Roboto Medium 14 sp, all-caps text
-    Default background fill: #323232 100%  
-  */
     left: 0px;
     right: 0px;
   }
+}
+
+@media (max-height: 320px) {
+	.paper-snackbar {
+		padding: 4px 6px;
+		font-size: 70%;	
+	}
 }
 
 .paper-snackbar .action {
@@ -637,4 +644,69 @@ input:-ms-input-placeholder {
   min-width: min-content;
 }
 
-/***************************************************************/
+/********************************************************************************
+									LOADERS
+*********************************************************************************/
+
+#loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #8F8F8F;
+  border-radius: 50%;
+  border-top: 16px solid red;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-height: 480px) {
+	#loader {
+	  width: 50px;
+	  height: 50px;
+	  margin: -40px 0 0 -35px;
+	  border: 10px solid #8F8F8F;
+	  border-radius: 50%;
+	  border-top: 10px solid red;
+	}
+}
+
+/********************************************************************************
+									TOOLTIPS
+*********************************************************************************/
+.tooltip { /*intentionally empty*/ }
+
+.tooltip .tooltipText {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 5px;
+    position:relative;
+    z-index: 1;
+}
+
+.tooltip:active .tooltipText {
+    visibility: visible;
+    left: 20%; 
+}
+
+/********************************************************************************/
+

@@ -1,7 +1,41 @@
+<!------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+	File Name: 
+		startGame.html
+	Created by: 
+		Nicos Kasenides (nkasenides@uclan.ac.uk / hfnovember@hotmail.com) 
+		For InSPIRE - UCLan Cyprus
+		June 2016
+	Description:
+		Starts a session with the user's information.
+--------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------->
+
+
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" type="text/css" href="style/thc-style.css">
+<link rel="icon" href="images/pirate_android_small.png">
+<title>Register</title>
+<script type="text/javascript" src="js/utilities.js"> </script>
+
+</head>
+
+<body>
+
 <script src="js/cookies.js"></script>
 <script src="js/utilities.js"></script>
 
+<div id="loader"></div>
+
+<div id="container">
+
 <script>
+
 
 	var categoryUUID = fetchGetVariable("categoryUUID");
 	var categoryName = fetchGetVariable("categoryName");
@@ -17,6 +51,7 @@
 			var sessionID = jsonData.sessionUUID;
 			setCookie("THCWebApp-sessionID", sessionID, 365);
 			setCookie("THCWebApp-playerName", playerName, 365); 
+			setCookie("THCWebApp-categoryName", categoryName, 365);
 			window.location.href = "currentQuestion.html";
 		}//end if OK
 		else if (statusItem != "OK") {
@@ -24,9 +59,17 @@
 			window.location.href = "register.html?cuuid=" + categoryUUID + "&cname=" + categoryName;
 		}//end if not OK
 		else alert("Unexpected error - " + statusItem);
+		document.getElementById("loader").style.display = "none";
+		document.getElementById("container").style.display = "block";
     }//end if ready
   	};//end if function()
   	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/startQuiz?playerName=" + playerName + "&appID=" + appID + "&categoryUUID=" + categoryUUID, true);
   	xhttp.send();
 
 </script>
+
+</div> <!--CONTAINER-->
+
+</body>
+
+</html>

@@ -24,11 +24,9 @@
   --%>
 
 <%--
-  Created by IntelliJ IDEA.
   User: Nearchos Paspallis
   Date: 11/09/13
   Time: 09:54
-  To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -67,6 +65,14 @@ You are not admin!
 <p>Number of sessions : <%=sessions.size()%></p>
 
 <p>Category: <b><%=category.getName()%></b></p>
+
+<form action="/admin/delete-all-sessions">
+    <div><input type="submit" value="Delete all sessions" /></div>
+    <input type="hidden" name="<%= CategoryFactory.PROPERTY_UUID%>" value="<%= categoryUUID %>"/>
+    <input type="hidden" name="<%= DeleteEntity.REDIRECT_URL %>" value="<%= URLEncoder.encode("/admin/sessions?category_uuid=" + categoryUUID, "UTF-8") %>"/>
+</form>
+
+<p/>
 
 <table border="1">
     <tr>

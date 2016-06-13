@@ -1,25 +1,44 @@
+<!------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+	File Name: 
+		register.html
+	Created by: 
+		Nicos Kasenides (nkasenides@uclan.ac.uk / hfnovember@hotmail.com) 
+		For InSPIRE - UCLan Cyprus
+		June 2016
+	Description:
+		Shows a form that allows a user to register a name and e-mail to play.
+--------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------->
+
+
+
 <!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <link rel="stylesheet" type="text/css" href="style/thc-style.css">
+<link rel="icon" href="images/pirate_android_small.png">
 <title>Register</title>
-
 <script type="text/javascript" src="js/utilities.js"> </script>
 
 </head>
 
 <body>
 
-<div class="container">
+<div id="container" style="display:block">
 
-    <ul class="topNav">
-    <li><a onClick="window.history.back();" href="#">&#10094;</a></li>
-    <img src="images/pirate_android_small_WithTitle.png" class="topNavImage" alt="Code Cyprus Image" />
-      <!--<li style="float:right"><a href="selectCategory.html">Refresh</a></li>-->
-      <div class="clearFloat"></div>
-    </ul>
+	<script>createSnackbar('Please make sure you ALLOW Geolocation in your browser.', 5000);</script>
+
+	<div class="header">
+        <ul class="topNav">
+        <li><a onClick="window.history.back();" href="#">&#10094;</a></li>
+        <img src="images/pirate_android_small_WithTitle.png" class="topNavImage" alt="Code Cyprus Image" />
+          <!--<li style="float:right"><a href="selectCategory.html">Refresh</a></li>-->
+          <div class="clearFloat"></div>
+        </ul>
+    </div>
     
     <div class="instructions">
         <img src="images/pirate_android_small.png" alt="Pirate Image" id="registerPirateImage" />
@@ -36,8 +55,10 @@
 	</script>
 
 	<form name="registerPiratesForm" id="registerPiratesForm" action="startGame.html" method="get">
-	  	<p><input id="firstPirateName" type="text" title="Name can only contain letters" name="firstPirateName" pattern="[a-z]{1,20}" placeholder="Name..." size="20" class="text" required></p>
-	  	<p><input id="firstPirateEmail" type="email" title="Email should be in the format example@domain.com" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" name="firstPirateEmail" placeholder="E-Mail..." size="30" class="text" required></p>
+    
+	  	<p><input id="firstPirateName" type="text" title="Name can only contain letters, numbers, - and ." name="firstPirateName" pattern="[a-zA-Z0-9.-]{1,20}" placeholder="Name..." maxlength="20" class="text" required></p>
+        
+	  	<p><input id="firstPirateEmail" type="email" title="Email should be in the format example@domain.com" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-z]{2,24}$" name="firstPirateEmail" placeholder="E-Mail..." maxlength="60" class="text" required></p>
         
         <input type="hidden" id="cUUIDField" name="categoryUUID"/>
         <input type="hidden" id="cNameField" name="categoryName"/>
