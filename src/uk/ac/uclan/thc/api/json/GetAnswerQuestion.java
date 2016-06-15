@@ -62,6 +62,7 @@ public class GetAnswerQuestion extends HttpServlet
         final PrintWriter printWriter = response.getWriter();
 
         // if magic is specified and equals {@link MAGIC}, then show inactive categories too - used by the examiner
+        final String code = request.getParameter("code");
         final String sessionUUID = request.getParameter("session");
         final String answer = request.getParameter("answer");
 
@@ -81,7 +82,7 @@ public class GetAnswerQuestion extends HttpServlet
             else
             {
                 final Category category = CategoryFactory.getCategory(session.getCategoryUUID());
-                if(category != null && !category.isActiveNow())
+                if(category != null && !category.isActiveNow() && code != null && code.equals(category.getCode()))
                 {
                     // ignore reply builder, and output the error status/message and terminate
                     printWriter.println(Protocol.getJsonStatus("Inactive category", "The specified category is not active"));

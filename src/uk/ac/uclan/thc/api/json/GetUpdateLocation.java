@@ -91,11 +91,12 @@ public class GetUpdateLocation extends HttpServlet
                     // adding the fingerprint
                     final Key key = LocationFingerprintFactory.addLocationFingerprint(lat, lng, sessionUUID);
 
-                    final StringBuilder reply = new StringBuilder("{").append(EOL);
-                    reply.append("  \"status\": \"OK\"").append(EOL); // OK status
-                    reply.append("}").append(EOL); // OK status
+                    String reply = "{" + EOL +
+                            "  \"status\": \"OK\"" + EOL + // OK status
+                            "}" + EOL;
 
-                    printWriter.println(reply.toString()); // normal JSON output
+                    printWriter.println(reply // OK status
+                    ); // normal JSON output
                 }
                 catch (NumberFormatException nfe)
                 {

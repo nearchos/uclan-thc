@@ -13,7 +13,7 @@
     </facet>
     <facet type="google-app-engine" name="Google App Engine">
       <configuration>
-        <sdk-home-path>C:/Program Files/appengine-java-sdk-1.9.32</sdk-home-path>
+        <sdk-home-path>C:/Program Files/appengine-java-sdk-1.9.38</sdk-home-path>
       </configuration>
     </facet>
   </component>
@@ -24,7 +24,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="AppEngine Dev 1.9.32" level="application_server_libraries" />
+    <orderEntry type="library" scope="PROVIDED" name="AppEngine Dev 1.9.38" level="application_server_libraries" />
     <orderEntry type="library" name="AppEngine API" level="project" />
   </component>
 </module>

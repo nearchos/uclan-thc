@@ -35,8 +35,10 @@
 package uk.ac.uclan.thc.api.json;
 
 import uk.ac.uclan.thc.api.Protocol;
+import uk.ac.uclan.thc.data.CategoryFactory;
 import uk.ac.uclan.thc.data.QuestionFactory;
 import uk.ac.uclan.thc.data.SessionFactory;
+import uk.ac.uclan.thc.model.Category;
 import uk.ac.uclan.thc.model.Question;
 import uk.ac.uclan.thc.model.Session;
 
@@ -64,7 +66,7 @@ public class GetSkipQuestion extends HttpServlet
         response.setHeader("Access-Control-Allow-Origin", "*"); // todo disable this (in all JSON requests)?
         final PrintWriter printWriter = response.getWriter();
 
-        // if magic is specified and equals {@link MAGIC}, then show inactive categories too - used by the examiner
+        final String code = request.getParameter("code");
         final String sessionUUID = request.getParameter("session");
 
         if(sessionUUID == null || sessionUUID.isEmpty())
@@ -82,24 +84,33 @@ public class GetSkipQuestion extends HttpServlet
             }
             else
             {
-                final String currentQuestionUUID = session.getCurrentQuestionUUID();
-                final Question currentQuestion = QuestionFactory.getQuestion(currentQuestionUUID);
-                final String correctAnswer = currentQuestion.getCorrectAnswer().trim();
-                if(correctAnswer.equals("teamChallenge"))
+                final Category category = CategoryFactory.getCategory(session.getCategoryUUID());
+                if(category != null && !category.isActiveNow() && code != null && code.equals(category.getCode()))
                 {
                     // ignore reply builder, and output the error status/message and terminate
-                    printWriter.println(Protocol.getJsonStatus("Mandatory question", "This specific question cannot be skipped"));
+                    printWriter.println(Protocol.getJsonStatus("Inactive category", "The specified category is not active"));
                 }
                 else
                 {
-                    final boolean hasMoreQuestions = SessionFactory.updateScoreAndSkipSessionToNextQuestion(sessionUUID);
+                    final String currentQuestionUUID = session.getCurrentQuestionUUID();
+                    final Question currentQuestion = QuestionFactory.getQuestion(currentQuestionUUID);
+                    final String correctAnswer = currentQuestion.getCorrectAnswer().trim();
+                    if(correctAnswer.equals("teamChallenge"))
+                    {
+                        // ignore reply builder, and output the error status/message and terminate
+                        printWriter.println(Protocol.getJsonStatus("Mandatory question", "This specific question cannot be skipped"));
+                    }
+                    else
+                    {
+                        final boolean hasMoreQuestions = SessionFactory.updateScoreAndSkipSessionToNextQuestion(sessionUUID);
 
-                    final StringBuilder reply = new StringBuilder("{").append(EOL);
-                    reply.append("  \"status\": \"OK\"").append(",").append(EOL); // OK status
-                    reply.append("  \"hasMoreQuestions\": ").append(hasMoreQuestions).append(EOL); // OK status
-                    reply.append("}").append(EOL);
+                        final StringBuilder reply = new StringBuilder("{").append(EOL);
+                        reply.append("  \"status\": \"OK\"").append(",").append(EOL); // OK status
+                        reply.append("  \"hasMoreQuestions\": ").append(hasMoreQuestions).append(EOL); // OK status
+                        reply.append("}").append(EOL);
 
-                    printWriter.println(reply.toString()); // normal JSON output
+                        printWriter.println(reply.toString()); // normal JSON output
+                    }
                 }
             }
         }

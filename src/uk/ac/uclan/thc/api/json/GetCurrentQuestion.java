@@ -67,6 +67,7 @@ public class GetCurrentQuestion extends HttpServlet
         response.setHeader("Access-Control-Allow-Origin", "*"); // todo disable this (in all JSON requests)?
         final PrintWriter printWriter = response.getWriter();
 
+        final String code = request.getParameter("code");
         final String sessionUUID = request.getParameter("session");
 
         if(sessionUUID == null)
@@ -86,7 +87,7 @@ public class GetCurrentQuestion extends HttpServlet
             else
             {
                 final Category category = CategoryFactory.getCategory(session.getCategoryUUID());
-                if(category != null && !category.isActiveNow())
+                if(category != null && !category.isActiveNow() && code != null && code.equals(category.getCode()))
                 {
                     // ignore reply builder, and output the error status/message and terminate
                     printWriter.println(Protocol.getJsonStatus("Inactive category", "The specified category is not active"));

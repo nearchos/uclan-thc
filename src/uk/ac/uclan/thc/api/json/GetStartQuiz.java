@@ -122,12 +122,12 @@ public class GetStartQuiz extends HttpServlet
 
 
                         // finally prepare and send the reply
-                        final StringBuilder reply = new StringBuilder("{").append(EOL);
-                        reply.append("  \"status\": \"OK\"").append(",").append(EOL); // OK status
-                        reply.append("  \"sessionUUID\": \"").append(sessionUUID).append("\"").append(EOL); // OK status
-                        reply.append("}").append(EOL);
+                        String reply = "{" + EOL +
+                                "  \"status\": \"OK\"" + "," + EOL + // OK status
+                                "  \"sessionUUID\": \"" + sessionUUID + "\"" + EOL + // OK status
+                                "}" + EOL;
 
-                        printWriter.println(reply.toString()); // normal JSON output
+                        printWriter.println(reply); // normal JSON output
                     }
                 }
             }

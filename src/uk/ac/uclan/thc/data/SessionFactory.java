@@ -210,7 +210,9 @@ public class SessionFactory
                 categoryUUID);
         final Query query = new Query(KIND);
         query.setFilter(filterCategory);
-        query.addSort(PROPERTY_SCORE, Query.SortDirection.DESCENDING);
+        query
+                .addSort(PROPERTY_SCORE, Query.SortDirection.DESCENDING)
+                .addSort(PROPERTY_FINISH_TIME, Query.SortDirection.ASCENDING);
         final PreparedQuery preparedQuery = datastoreService.prepare(query);
         final Vector<Session> sessions = new Vector<Session>();
         int count = 0;
