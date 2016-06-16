@@ -133,7 +133,14 @@ public class GetAnswerQuestion extends HttpServlet
                         }
                     }
 
-                    reply.append("  \"feedback\": \"").append(feedback).append("\"").append(EOL); // OK status
+                    final long score;
+                    {
+                        final Session revisedSession = SessionFactory.getSession(sessionUUID);
+                        score = revisedSession != null ? revisedSession.getScore() : 0L;
+                    }
+
+                    reply.append("  \"feedback\": \"").append(feedback).append("\",").append(EOL); // OK status
+                    reply.append("  \"score\": ").append(score).append(EOL); // OK status
                     reply.append("}").append(EOL);
 
                     printWriter.println(reply.toString()); // normal JSON output
