@@ -131,3 +131,12 @@ function getSuffix(i) {
     return i + "th";	
 }//end getSuffix()
 /********************************************************************************/
+
+/********************************************************************************/
+//Detects if a device is an Android and displays a Google Play badge on index page
+function isAndroid() {
+	var ua = navigator.userAgent.toLowerCase();
+	var isAndroid = ua.indexOf("android") > -1;
+	if(isAndroid) document.getElementById("gappsBadge").style.display = "block";
+}//end isAndroid
+/********************************************************************************/

@@ -16,9 +16,11 @@
 
 /********************************************************************************/
 //Calls getLocationValues() if user has Geolocation or displays a warning message using showError().
+//Updates Location automatically every 10 seconds.
 function updateLocation() {
 	if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getLocationValues, showError);
 	else alert("Geolocation is not supported by this browser.");
+	setTimeout(updateLocation, 10000);
 }//end updateLocation()
 /************************************************************************************/
 
@@ -27,19 +29,19 @@ function updateLocation() {
 function showError(error) {
 	switch(error.code) 	{
 		case error.PERMISSION_DENIED:
-			createSnackbar("User denied the request for Geolocation. Please make sure you ALLOW Geolocation in your browser.", 5000);
+			alert("User denied the request for Geolocation. Please make sure you ALLOW Geolocation in your browser.");
 			break;
 
 		case error.POSITION_UNAVAILABLE:
-			createSnackbar("Location information is unavailable.", 2500);
+			alert("Location information is unavailable.");
 			break;
 
 		case error.TIMEOUT:
-			createSnackbar("The request to get user location timed out.", 2500);
+			alert("The request to get user location timed out.");
 			break;
 
 		case error.UNKNOWN_ERROR:
-			createSnackbar("An unknown error occurred.", 2500);
+			alert("An unknown error occurred.");
 			break;
 	}//end switch
 }//end showError()
@@ -61,7 +63,7 @@ function setLocation(lat, lon) {
   	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
 			var jsonData = JSON.parse(xhttp.responseText);
-			if (jsonData.status == "OK")  {/*do nothing*/}
+			if (jsonData.status == "OK")  {/*Do nothing*/}
 			else alert(jsonData.status + " - " + jsonData.message);
 		}//end if ready
   	};

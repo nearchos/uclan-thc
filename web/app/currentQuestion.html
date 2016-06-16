@@ -25,9 +25,11 @@
 <link rel="icon" href="images/pirate_android_small.png">
 <script src="js/utilities.js"> </script>
 <script src="js/getScoreboard.js"></script> 
+<script src="js/updateLocation.js"></script>
+<script src="js/answerQuestion.js"></script>
 </head>
 
-<body onload="updateQuestion();">
+<body onload="updateQuestion(); updateLocation();">
 
 <div id="loader"></div>
 
@@ -36,8 +38,9 @@
 	<div class="header">
         <ul class="topNav">
         <!--<li><a onClick="window.history.back();" href="#">&#10094;</a></li>-->
-        <img src="images/pirate_android_small_WithTitle.png" class="topNavImage" alt="Code Cyprus Image"/>
-          <li style="float:right"><a id="displayScoreboard" onClick="showModal('scoreboardPopup');" href="#">Scoreboard</a></li>
+        <img class="topNavImage" src="images/pirate_android_verysmall.png" alt="Code Cyprus Image" />
+    		<p class="codeCy"> Code Cyprus </p>
+          <li style="float:right"><a id="displayScoreboard" onClick="showModal('scoreboardPopup');" href="#">Scoreboard &#8250;</a></li>
           <div class="clearFloat"></div>
         </ul>
     </div>
@@ -57,11 +60,6 @@
 			</script>
       </li>
     </ul>
-
-
-    
-    <script src="js/updateLocation.js"></script>
-    <script src="js/answerQuestion.js"></script>
     
     	
     <div class="content" align="center">

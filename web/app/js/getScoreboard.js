@@ -51,7 +51,7 @@ function getScoreboard() {
 					appID.className = "tooltipText";
 					playerName.innerHTML = data[i].playerName;
 					rank.innerHTML = data[i].rank;
-					if (data[i].rank > 10) entry.style.borderTopStyle = "dotted";
+					if (data[i].rank > 11) entry.style.borderTopStyle = "dotted";
 					if (data[i].playerName == currentPlayerName) entry.className += "currentPlayer tooltip";
 					else entry.className += "tooltip";
 					var timeFinished = document.createElement('small');
@@ -108,7 +108,7 @@ function getScoreboardAsPopup() {
 					var rank = document.createElement('div');
 					playerName.innerHTML = data[i].playerName;
 					rank.innerHTML = data[i].rank;
-					if (data[i].rank > 10) entry.style.borderTopStyle = "dotted";
+					if (data[i].rank > 11) entry.style.borderTopStyle = "dotted";
 					if (data[i].playerName == currentPlayerName) entry.className += "currentPlayer";
 					var clearfloat = document.createElement('div');
 					scorebox.innerHTML = data[i].score + " Pts";

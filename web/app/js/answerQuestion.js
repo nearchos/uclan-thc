@@ -96,25 +96,26 @@ function answerQuestionMCQ(answer) {
 			if (jsonData.status == "OK") {
 				if (jsonData.feedback == "correct,unfinished") {
 					createSnackbar('✔ Correct ✔');
+					getScoreboardAsPopup();
 					updateQuestion();	
 				}//end if unfinished
 				else if (jsonData.feedback == "correct,finished") {
 					updateQuestion();	
-					window.location.href="scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie("THCWebApp-playerName");
+					window.location.href="../scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie("THCWebApp-playerName");
 				}//end if finished
 				else if (jsonData.feedback == "incorrect") {
 					createSnackbar('✘ Incorrect ✘');
+					getScoreboardAsPopup();
 					updateScore();
 				}//end if incorrect
 				else if (jsonData.feedback == "unknown or incorrect location") createSnackbar('✜ Incorrect Location ✜');
 				else alert("Unexpected Problem");
 			}//end if ok
-			else alert(jsonData.status + " - " + jsonData.message);
+			else createSnackbar(jsonData.status + " - " + jsonData.message);
 		} //end if ready
   	}; //end function()
   	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/answerQuestion?answer=" + answer + "&session=" + sessionID, true);
   	xhttp.send();
-	getScoreboardAsPopup();
 }//end answerQuestionMCQ()
 /********************************************************************************/
 
@@ -146,7 +147,7 @@ function answerQuestionTxt() {
 				else alert("Unexpected Problem");
 			}//end if ok
 			else if (jsonData.status == "Invalid or missing parameters") createSnackbar('Your answer cannot be empty');
-			else alert(jsonData.status + " - " + jsonData.message);
+			else createSnackbar(jsonData.status + " - " + jsonData.message);
 		}//end if ready
   	};//end if function()
   	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/answerQuestion?answer=" + answer + "&session=" + sessionID, true);

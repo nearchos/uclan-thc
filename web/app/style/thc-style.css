@@ -37,7 +37,11 @@ body {
 
 #container {
 	display:none;
-	margin-top:65px;
+	margin-top:60px;
+}
+
+@media only screen and (max-width: 240px) {
+	#container { margin-top:50px }
 }
 
 #question { text-align:left; }
@@ -130,6 +134,15 @@ p {
 	#questionsPirateImage { width:auto; }
 }
 
+#gappsBadge {
+	display:none;	
+}
+
+.gappsBadgeImage {
+	width:50%;
+	max-width: 250px;
+}
+
 /********************************************************************************
 								TOP NAVIGATION BAR
 *********************************************************************************/
@@ -166,11 +179,19 @@ ul.topNav li a:hover:not(.active) { background-color: #8C8C8C; }
 
 .topNavImage {
 	float:left;
-	width:40%;
-	height:100%;
-	max-width:120px;
-	max-height:80px;
-	margin:4px;
+	margin:5px;
+	margin-right: 2px;
+}
+
+@media only screen and (max-width: 320px) {
+	.topNavImage {max-height: 20px; }
+}
+
+.codeCy {
+	float:left;
+	margin:8px;
+	margin-left: 1px;
+	margin-right: 1px;
 }
 
 /********************************************************************************

@@ -36,9 +36,10 @@
 <div class="header">
     <ul class="topNav">
     <!-- <li><a onClick="window.history.back();" href="#">&#10094;</a></li>-->
-    <img src="images/pirate_android_small_WithTitle.png" class="topNavImage" alt="Code Cyprus Image" />
-      <li style="float:right"><a href="about.html">About &#10095;</a></li>
-      <li style="float:right"><a onclick="showModal('helpPage');" href="#">Help &#65516;</a></li>
+    <img class="topNavImage" src="images/pirate_android_verysmall.png" alt="Code Cyprus Image" />
+    <p class="codeCy"> Code Cyprus </p>
+      <li style="float:right"><a href="about.html">About &#8250;</a></li>
+      <li style="float:right"><a onclick="showModal('helpPage');" href="#">Help</a></li>
       <div class="clearFloat"></div>
     </ul>
 </div>
@@ -54,8 +55,11 @@
         <p class="bubble"> Ahoy pirates! And welcome to the Code Cyprus' Treasure Hunt! <br>
 If you have questions, select the 'Help' menu. When you are ready, click the button below to get started!</p>
         <img src="images/pirate_android_small.png" class="pirateImage" alt="Pirate Image" /><br/>
-        <button class="THCButton startButton" name="startBtn" onClick="cookieFinder()">Let's get Started! &#10095;</button>
+        <button class="THCButton startButton" name="startBtn" onClick="cookieFinder()">Let's get Started! &#10095;</button>  
+        <br/>
+        <a id="gappsBadge" href='https://play.google.com/store/apps/details?id=org.codecyprus.android_client&hl=en&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img class="gappsBadgeImage" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
         
+        <script>isAndroid();</script>
         
      	<!-- Help page Modal -->
 <div id="helpPage" class="modal">
