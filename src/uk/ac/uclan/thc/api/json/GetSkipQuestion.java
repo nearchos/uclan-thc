@@ -94,6 +94,7 @@ public class GetSkipQuestion extends HttpServlet
                 {
                     final String currentQuestionUUID = session.getCurrentQuestionUUID();
                     final Question currentQuestion = QuestionFactory.getQuestion(currentQuestionUUID);
+                    assert currentQuestion != null;
                     final String correctAnswer = currentQuestion.getCorrectAnswer().trim();
                     if(correctAnswer.equals("teamChallenge"))
                     {
@@ -103,13 +104,17 @@ public class GetSkipQuestion extends HttpServlet
                     else
                     {
                         final boolean hasMoreQuestions = SessionFactory.updateScoreAndSkipSessionToNextQuestion(sessionUUID);
+                        final Session updatedSession = SessionFactory.getSession(sessionUUID);
+                        assert updatedSession != null;
+                        final long score = updatedSession.getScore();
 
-                        final StringBuilder reply = new StringBuilder("{").append(EOL);
-                        reply.append("  \"status\": \"OK\"").append(",").append(EOL); // OK status
-                        reply.append("  \"hasMoreQuestions\": ").append(hasMoreQuestions).append(EOL); // OK status
-                        reply.append("}").append(EOL);
+                        String reply = "{" + EOL +
+                                "  \"status\": \"OK\"" + "," + EOL + // OK status
+                                "  \"hasMoreQuestions\": " + hasMoreQuestions + "," + EOL + // has more questions?
+                                "  \"score\": " + score + EOL + // score
+                                "}" + EOL;
 
-                        printWriter.println(reply.toString()); // normal JSON output
+                        printWriter.println(reply); // normal JSON output
                     }
                 }
             }
