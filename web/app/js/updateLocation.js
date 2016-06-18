@@ -16,11 +16,20 @@
 
 /********************************************************************************/
 //Calls getLocationValues() if user has Geolocation or displays a warning message using showError().
-//Updates Location automatically every 10 seconds.
 function updateLocation() {
 	if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getLocationValues, showError);
 	else alert("Geolocation is not supported by this browser.");
-	setTimeout(updateLocation, 10000);
+}//end updateLocation()
+/************************************************************************************/
+
+/********************************************************************************/
+//Updates Location automatically every 60 seconds, independently from updateLocation().
+function timedUpdateLocation() {
+	if (document.hasFocus()) {
+		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getLocationValues, showError);
+		else alert("Geolocation is not supported by this browser.");
+	}//end if hasFocus()
+	setTimeout(timedUpdateLocation, 60000); //60,000 milliseconds = 60 seconds
 }//end updateLocation()
 /************************************************************************************/
 
@@ -63,7 +72,7 @@ function setLocation(lat, lon) {
   	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
 			var jsonData = JSON.parse(xhttp.responseText);
-			if (jsonData.status == "OK")  {/*Do nothing*/}
+			if (jsonData.status == "OK")  {/*do nothing*/}
 			else alert(jsonData.status + " - " + jsonData.message);
 		}//end if ready
   	};

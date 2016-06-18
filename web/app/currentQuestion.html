@@ -29,7 +29,7 @@
 <script src="js/answerQuestion.js"></script>
 </head>
 
-<body onload="updateQuestion(); updateLocation();">
+<body onload="updateQuestion(); timedUpdateLocation(); updateScore();">
 
 <div id="loader"></div>
 
@@ -40,7 +40,7 @@
         <!--<li><a onClick="window.history.back();" href="#">&#10094;</a></li>-->
         <img class="topNavImage" src="images/pirate_android_verysmall.png" alt="Code Cyprus Image" />
     		<p class="codeCy"> Code Cyprus </p>
-          <li style="float:right"><a id="displayScoreboard" onClick="showModal('scoreboardPopup');" href="#">Scoreboard &#8250;</a></li>
+          <li style="float:right"><a id="displayScoreboard" onClick="getScoreboardAsPopup(); showModal('scoreboardPopup');" href="#">Scoreboard &gt;</a></li>
           <div class="clearFloat"></div>
         </ul>
     </div>

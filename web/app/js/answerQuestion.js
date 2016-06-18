@@ -27,16 +27,24 @@ function updateScore() {
 				var score = jsonData.score;
 				var scoreLabel = document.getElementById("score");
 				scoreLabel.innerHTML = + score;
-				if (score > 0) scoreLabel.style.color = "green";
-				else if (score == 0) scoreLabel.style.color = "#FF5100";
-				else scoreLabel.style.color = "red";
 			}//end if OK
 			else alert(jsonData.status + " " + jsonData.message);
 		}//end if ready
   	};//end if function()
   	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/score?session=" + sessionID, true);
   	xhttp.send();	
+	changeScoreLabelColor();
 }//end updateScore();
+/********************************************************************************/
+
+/********************************************************************************/
+//Changes the color in the score label from green to orange to red.
+function changeScoreLabelColor() {
+	var score = document.getElementById("score");
+	if (score.innerHTML > 0) score.style.color = "green";
+	else if (score.innerHTML == 0) score.style.color = "#FF5100";
+	else score.style.color = "red";
+}//end changeScoreLabelColor()
 /********************************************************************************/
 
 /********************************************************************************/
@@ -80,8 +88,6 @@ function updateQuestion() {
   	};//end if function()
   	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/currentQuestion?session=" + sessionID, true);
   	xhttp.send();
-	updateScore();	
-	getScoreboardAsPopup();
 }//end updateQuestion();
 /********************************************************************************/
 
@@ -94,9 +100,10 @@ function answerQuestionMCQ(answer) {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
 			var jsonData = JSON.parse(xhttp.responseText);
 			if (jsonData.status == "OK") {
+				document.getElementById("score").innerHTML = jsonData.score;
+				changeScoreLabelColor();
 				if (jsonData.feedback == "correct,unfinished") {
 					createSnackbar('✔ Correct ✔');
-					getScoreboardAsPopup();
 					updateQuestion();	
 				}//end if unfinished
 				else if (jsonData.feedback == "correct,finished") {
@@ -105,8 +112,6 @@ function answerQuestionMCQ(answer) {
 				}//end if finished
 				else if (jsonData.feedback == "incorrect") {
 					createSnackbar('✘ Incorrect ✘');
-					getScoreboardAsPopup();
-					updateScore();
 				}//end if incorrect
 				else if (jsonData.feedback == "unknown or incorrect location") createSnackbar('✜ Incorrect Location ✜');
 				else alert("Unexpected Problem");
@@ -129,10 +134,11 @@ function answerQuestionTxt() {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
 			var jsonData = JSON.parse(xhttp.responseText);
 			if (jsonData.status == "OK") {
+				document.getElementById("score").innerHTML = jsonData.score;
+				changeScoreLabelColor();
 				if (jsonData.feedback == "correct,unfinished") {
 					createSnackbar('✔ Correct ✔');
 					updateQuestion();	
-					getScoreboardAsPopup();
 				}//end if unfinished
 				else if (jsonData.feedback == "correct,finished") {
 					updateQuestion();
@@ -140,8 +146,6 @@ function answerQuestionTxt() {
 				}//end if finished
 				else if (jsonData.feedback == "incorrect") {
 					createSnackbar('✘ Incorrect ✘');
-					updateScore();
-					getScoreboardAsPopup();
 				}//end if incorrect
 				else if (jsonData.feedback == "unknown or incorrect location") createSnackbar('✜ Incorrect Location ✜');
 				else alert("Unexpected Problem");
@@ -163,7 +167,10 @@ function skipQuestion() {
 	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
 			var jsonData = JSON.parse(xhttp.responseText);
+			alert(xhttp.responseText);
 			if (jsonData.status == "OK") {
+				document.getElementById("score").innerHTML = jsonData.score;
+				changeScoreLabelColor();
 				if (jsonData.hasMoreQuestions) updateQuestion();
 				else {
 					updateQuestion();
@@ -180,6 +187,5 @@ function skipQuestion() {
 	xhttp.send();
 	document.getElementById("answer").value = "";
 	createSnackbar("Skipped question", 2000);
-	getScoreboardAsPopup();
 }//end skipQuestion()
 /********************************************************************************/
