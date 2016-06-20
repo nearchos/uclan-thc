@@ -15,26 +15,69 @@
 
 
 /********************************************************************************/
-//Calls getLocationValues() if user has Geolocation or displays a warning message using showError().
+var GLOBAL_LAT; //Stores the updated latitude
+var GLOBAL_LON; //Stores the updated longitude
+var GLOBAL_LocationInitialized = false; //Determines if location was initialized manual at the start.
+//NOTE: This variable is used to avoid a blank auto-update at page load.
+
+/********************************************************************************/
+//Updates the stored location locally every 10 seconds.
+function client_updateLocation_Auto() {
+	if (navigator.geolocation) navigator.geolocation.getCurrentPosition(client_updateGlobals, showError);
+	else alert("Geolocation is not supported by this browser.");
+	setTimeout(client_updateLocation_Auto, 10000);
+}//end local_updateLocation()
+/********************************************************************************/
+
+/********************************************************************************/
+//Receives location from client_updateLocation_Auto() and updates globals.
+function client_updateGlobals(position) {
+	GLOBAL_LAT = position.coords.latitude;
+	GLOBAL_LON = position.coords.longitude;	
+}//end client_updateGlobals()
+/********************************************************************************/
+
+/********************************************************************************/
+//Makes an AUTOMATIC server request to set the user's location to the current globals.
+//Interval: 60 seconds.
+function server_updateLocation_Auto() {
+	if (GLOBAL_LocationInitialized) {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+		if (xhttp.readyState == 4 && xhttp.status == 200) {/*DO NOTHING*/}
+		};
+	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/updateLocation?lat=" + GLOBAL_LAT + "&lng=" + GLOBAL_LON + "&session=" + sessionID, true);
+		xhttp.send();
+	}//end if
+	setTimeout(server_updateLocation_Auto, 60000);	
+}//end server_updateLocation_Auto()
+/****************************************************************************/
+
+/****************************************************************************/
+//Updates Location on user answer.
 function updateLocation() {
-	if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getLocationValues, showError);
+	if (navigator.geolocation) navigator.geolocation.getCurrentPosition(server_updateLocation_Manual, showError);
 	else alert("Geolocation is not supported by this browser.");
 }//end updateLocation()
-/************************************************************************************/
+/****************************************************************************/
 
-/********************************************************************************/
-//Updates Location automatically every 60 seconds, independently from updateLocation().
-function timedUpdateLocation() {
-	if (document.hasFocus()) {
-		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(getLocationValues, showError);
-		else alert("Geolocation is not supported by this browser.");
-	}//end if hasFocus()
-	setTimeout(timedUpdateLocation, 60000); //60,000 milliseconds = 60 seconds
-}//end updateLocation()
-/************************************************************************************/
+/****************************************************************************/
+//Makes a MANUAL server request on user answer to update the user's location.
+function server_updateLocation_Manual(position) {
+	 var lat = position.coords.latitude;
+	 var lon = position.coords.longitude;
+	 
+	 var xhttp = new XMLHttpRequest();
+  	xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {/*do nothing*/}
+  	};
+xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/updateLocation?lat=" + lat + "&lng=" + lon + "&session=" + sessionID, true);
+  	xhttp.send();
+}//end server_updateLocation_Manual()
+/****************************************************************************/
 
-/********************************************************************************/
-//Creates a snackbar to indicate an error in updating the location.
+/****************************************************************************/
+//Creates an alert to indicate an error in updating the location.
 function showError(error) {
 	switch(error.code) 	{
 		case error.PERMISSION_DENIED:
@@ -54,29 +97,4 @@ function showError(error) {
 			break;
 	}//end switch
 }//end showError()
-/********************************************************************************/
-
-/********************************************************************************/
-//Gets latitude and longitude from a given location.
- function getLocationValues(position) {
-	 var lat = position.coords.latitude;
-	 var lon = position.coords.longitude;
-	 setLocation(lat, lon);
- }//end getLocationValues()
-/********************************************************************************/
-
-/********************************************************************************/
-//Makes a server request to set the user's location to the given latitude and longitude.
-function setLocation(lat, lon) {
-	var xhttp = new XMLHttpRequest();
-  	xhttp.onreadystatechange = function() {
-		if (xhttp.readyState == 4 && xhttp.status == 200) {
-			var jsonData = JSON.parse(xhttp.responseText);
-			if (jsonData.status == "OK")  {/*do nothing*/}
-			else alert(jsonData.status + " - " + jsonData.message);
-		}//end if ready
-  	};
-  	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/updateLocation?lat=" + lat + "&lng=" + lon + "&session=" + sessionID, true);
-  	xhttp.send();
-}//end setLocation()
-/********************************************************************************/
+/****************************************************************************/

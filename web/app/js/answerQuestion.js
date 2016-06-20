@@ -167,7 +167,6 @@ function skipQuestion() {
 	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
 			var jsonData = JSON.parse(xhttp.responseText);
-			alert(xhttp.responseText);
 			if (jsonData.status == "OK") {
 				document.getElementById("score").innerHTML = jsonData.score;
 				changeScoreLabelColor();
