@@ -40,6 +40,7 @@
 	var categoryUUID = fetchGetVariable("categoryUUID");
 	var categoryName = fetchGetVariable("categoryName");
 	var playerName = fetchGetVariable("firstPirateName");
+	var playerGender = fetchGetVariable("gender");
 	var appID = "THC-WebApp";
 
 	var xhttp = new XMLHttpRequest();
@@ -62,7 +63,7 @@
 			document.getElementById("container").style.display = "block";
 		}//end if ready
   	};//end if function()
-  	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/startQuiz?playerName=" + playerName + "&appID=" + appID + "&categoryUUID=" + categoryUUID, true);
+  	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/startQuiz?playerName=" + playerName + "&appID=" + appID + "&categoryUUID=" + categoryUUID + "&gender=" + playerGender, true);
   	xhttp.send();
 
 </script>

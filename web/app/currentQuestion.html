@@ -37,7 +37,6 @@
 
 	<div class="header">
         <ul class="topNav">
-        <!--<li><a onClick="window.history.back();" href="#">&#10094;</a></li>-->
         <img class="topNavImage" src="images/pirate_android_verysmall.png" alt="Code Cyprus Image" />
     		<p class="codeCy"> Code Cyprus </p>
           <li style="float:right"><a id="displayScoreboard" onClick="getScoreboardAsPopup(); showModal('scoreboardPopup');" href="#">Scoreboard &gt;</a></li>
@@ -79,7 +78,7 @@
     <input id="answerDBtn" name="answerDBtn" type="button" value="D" class="THCButton MCQ" onclick="answerQuestionMCQ('D')"/>
 </form>
 
-<form name="textForm" id="textForm" onsubmit="answerQuestionTxt()">
+<form name="textForm" id="textForm" onsubmit="answerQuestionTxt()" action="currentQuestion.html">
 	<input id="answer"  type="text" name="answer" placeholder="Answer here..." size="30" class="text" required/>
     <input id="submitBtn" class="THCButton" name="submitBtn" type="button" value="Submit" onClick="answerQuestionTxt();"/>
 </form>

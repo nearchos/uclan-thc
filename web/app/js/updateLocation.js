@@ -17,7 +17,7 @@
 /********************************************************************************/
 var GLOBAL_LAT; //Stores the updated latitude
 var GLOBAL_LON; //Stores the updated longitude
-var GLOBAL_LocationInitialized = false; //Determines if location was initialized manual at the start.
+var GLOBAL_LocationInitialized = false; //Determines if location was initialized manually at the start.
 //NOTE: This variable is used to avoid a blank auto-update at page load.
 
 /********************************************************************************/

@@ -108,7 +108,7 @@ function answerQuestionMCQ(answer) {
 				}//end if unfinished
 				else if (jsonData.feedback == "correct,finished") {
 					updateQuestion();	
-					window.location.href="../scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie("THCWebApp-playerName");
+					window.location.href="scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie("THCWebApp-playerName");
 				}//end if finished
 				else if (jsonData.feedback == "incorrect") {
 					createSnackbar('✘ Incorrect ✘');

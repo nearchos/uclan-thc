@@ -46,6 +46,7 @@ public class SessionFactory
     public static final String PROPERTY_FINISH_TIME = "finish_time";
     public static final String PROPERTY_NAME1 = "name1";
     public static final String PROPERTY_EMAIL1 = "email1";
+    public static final String PROPERTY_GENDER = "gender";
 
     static public Session getSession(final String keyAsString)
     {
@@ -84,6 +85,11 @@ public class SessionFactory
         }
     }
 
+    static public String getOrCreateSession(final String playerName, final String appID, final String categoryUUID, final String name1, final String email1)
+    {
+        return getOrCreateSession(playerName, appID, categoryUUID, name1, email1, "unknown");
+    }
+
     /**
      * Returns the UUID of the created (or retrieved) {@link Session}.
      *
@@ -93,7 +99,7 @@ public class SessionFactory
      * @return the UUID of the created {@link Session} or null if it could not be created (i.e. because the playerName,
      * categoryUUID combination was already used).
      */
-    static public String getOrCreateSession(final String playerName, final String appID, final String categoryUUID, final String name1, final String email1)
+    static public String getOrCreateSession(final String playerName, final String appID, final String categoryUUID, final String name1, final String email1, final String gender)
     {
         final DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
 
@@ -126,7 +132,7 @@ public class SessionFactory
 
                 // if questions.isEmpty, set text to empty String "" implying finished session
                 final String firstQuestionUUID = questions.isEmpty() ? "" : questions.elementAt(0).getUUID();
-                final Key key = addSession(playerName, appID, categoryUUID, firstQuestionUUID, name1, email1);
+                final Key key = addSession(playerName, appID, categoryUUID, firstQuestionUUID, name1, email1, gender);
 
                 transaction.commit();
 
@@ -407,12 +413,13 @@ public class SessionFactory
         }
     }
 
-    static public Key addSession(final String playerName,
-                                 final String appID,
-                                 final String categoryUUID,
-                                 final String currentQuestionUUID,
-                                 final String name1,
-                                 final String email1)
+    private static Key addSession(final String playerName,
+                                  final String appID,
+                                  final String categoryUUID,
+                                  final String currentQuestionUUID,
+                                  final String name1,
+                                  final String email1,
+                                  final String gender)
     {
         final DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
         final Entity sessionEntity = new Entity(KIND);
@@ -424,11 +431,12 @@ public class SessionFactory
         sessionEntity.setProperty(PROPERTY_FINISH_TIME, 0);
         sessionEntity.setProperty(PROPERTY_NAME1, name1);
         sessionEntity.setProperty(PROPERTY_EMAIL1, email1);
+        sessionEntity.setProperty(PROPERTY_GENDER, gender);
 
         return datastoreService.put(sessionEntity);
     }
 
-    static public Session getFromEntity(final Entity entity)
+    private static Session getFromEntity(final Entity entity)
     {
         return new Session(
                 KeyFactory.keyToString(entity.getKey()),
@@ -439,6 +447,7 @@ public class SessionFactory
                 (Long) entity.getProperty(PROPERTY_SCORE),
                 (Long) entity.getProperty(PROPERTY_FINISH_TIME),
                 entity.hasProperty(PROPERTY_NAME1) ? (String) entity.getProperty(PROPERTY_NAME1) : "",
-                entity.hasProperty(PROPERTY_EMAIL1) ? (String) entity.getProperty(PROPERTY_EMAIL1) : "");
+                entity.hasProperty(PROPERTY_EMAIL1) ? (String) entity.getProperty(PROPERTY_EMAIL1) : "",
+                entity.hasProperty(PROPERTY_GENDER) ? (String) entity.getProperty(PROPERTY_GENDER) : "unknown");
     }
 }

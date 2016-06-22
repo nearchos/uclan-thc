@@ -77,6 +77,8 @@ public class GetStartQuiz extends HttpServlet
         final String name2 = request.getParameter("name2");
         final String email2 = request.getParameter("email2");
         final String installationID = request.getParameter("installationID");
+        final String genderS = request.getParameter("gender");
+        final String gender = "m".equalsIgnoreCase(genderS) ? "male" : "f".equalsIgnoreCase(genderS) ? "female" : "unknown";
 
         if(playerName == null || playerName.isEmpty() || appID == null || appID.isEmpty() || categoryUUID == null || categoryUUID.isEmpty())
         {
@@ -101,7 +103,7 @@ public class GetStartQuiz extends HttpServlet
                 }
                 else
                 {
-                    final String sessionUUID = SessionFactory.getOrCreateSession(playerName, appID, categoryUUID, name1, email1);
+                    final String sessionUUID = SessionFactory.getOrCreateSession(playerName, appID, categoryUUID, name1, email1, gender);
 
                     if(sessionUUID == null)
                     {

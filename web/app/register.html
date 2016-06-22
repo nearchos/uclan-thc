@@ -33,10 +33,9 @@
 
 	<div class="header">
         <ul class="topNav">
-        <li><a onClick="window.history.back();" href="#">&lt;</a></li>
+        <li><a onClick="javascript:history.go(-1);" href="#">&lt;</a></li>
 		<img class="topNavImage" src="images/pirate_android_verysmall.png" alt="Code Cyprus Image" />
    		 <p class="codeCy"> Code Cyprus </p>
-          <!--<li style="float:right"><a href="selectCategory.html">Refresh</a></li>-->
           <div class="clearFloat"></div>
         </ul>
     </div>
@@ -61,6 +60,12 @@
         
 	  	<p><input id="firstPirateEmail" type="email" title="Email should be in the format example@domain.com" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-z]{2,24}$" name="firstPirateEmail" placeholder="E-Mail..." maxlength="60" class="text" required></p>
         
+        <p><select id="genderSelect" name="gender" placeholder="Select gender..." required>
+        	<option value="m">Male</option>
+            <option value="f">Female</option>
+            <option value="n">Would rather not say</option>
+        </select></p>
+        
         <input type="hidden" id="cUUIDField" name="categoryUUID"/>
         <input type="hidden" id="cNameField" name="categoryName"/>
         
@@ -69,7 +74,7 @@
 			document.getElementById("cNameField").value = categorySelectedName;
 		</script> 
         
-     	<p><input class="THCButton" type="submit" name="submitPirateNames" value="Find the Treasure!"></p>
+     	<p><input class="THCButton startButton" type="submit" name="submitPirateNames" value="Find the Treasure!"></p>
         
     </form>
     

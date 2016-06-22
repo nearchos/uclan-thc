@@ -35,6 +35,7 @@ public class Session implements Serializable
     private final long finishTime; // in milliseconds
     private final String name1;
     private final String email1;
+    private final String gender;
 
     public Session(final String uuid,
                    final String playerName,
@@ -44,7 +45,8 @@ public class Session implements Serializable
                    final long score,
                    final long finishTime,
                    final String name1,
-                   final String email1)
+                   final String email1,
+                   final String gender)
     {
         this.uuid = uuid;
         this.playerName = playerName;
@@ -55,6 +57,7 @@ public class Session implements Serializable
         this.finishTime = finishTime;
         this.name1 = name1;
         this.email1 = email1;
+        this.gender = gender;
     }
 
     public String getUUID()
@@ -100,5 +103,9 @@ public class Session implements Serializable
     public String getEmail1()
     {
         return email1;
+    }
+
+    public String getGender() {
+        return gender;
     }
 }
