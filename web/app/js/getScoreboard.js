@@ -116,8 +116,8 @@ function getScoreboardAsPopup() {
 					playerName.className = "playerName";
 					clearfloat.className = "clearFloat";
 					rank.className = "rank";
-					entry.appendChild(playerName);
 					entry.appendChild(rank);
+					entry.appendChild(playerName);
 					entry.appendChild(scorebox);
 					entry.appendChild(clearfloat);
 					list.appendChild(entry);

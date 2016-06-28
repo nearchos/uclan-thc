@@ -163,6 +163,8 @@ public class GetAnswerQuestion extends HttpServlet
                     code = code.substring(code.length() > 4 ? code.length() - 4 : 0);
                     return givenAnswer.equals(code);
                 }
+            case "noPenalty": // used for questions that are not part of the competition (i.e. all answers are correct)
+                return true;
             default:
                 return givenAnswer.equalsIgnoreCase(correctAnswer);
         }

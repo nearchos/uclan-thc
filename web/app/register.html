@@ -29,8 +29,6 @@
 
 <div id="container" style="display:block">
 
-	<script>createSnackbar('Please make sure you ALLOW Geolocation in your browser.', 5000);</script>
-
 	<div class="header">
         <ul class="topNav">
 		<img class="topNavImage" src="images/pirate_android_verysmall.png" alt="Code Cyprus Image" />
@@ -50,7 +48,7 @@
 		var categorySelectedUUID = fetchGetVariable("cuuid");
 		var categorySelectedName = fetchGetVariable("cname");
 		categorySelectedName = categorySelectedName.split('+').join(' ');
-		document.getElementById('registerBubble').innerHTML = "<p> Ahoy, we are looking for the \"" + categorySelectedName + "\"  treasure. Now tell us your name and e-mail and we are ready to go!</p>";
+		document.getElementById('registerBubble').innerHTML = "<p> Ahoy, we are looking for the \"" + categorySelectedName + "\"  treasure. Now tell us your name and e-mail and we are ready to go!</p><p style='color:red'>Make sure you <u>ALLOW</u> Geolocation in your browser!";
 	</script>
 
 	<form name="registerPiratesForm" id="registerPiratesForm" action="startGame.html" method="get">

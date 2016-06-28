@@ -84,6 +84,8 @@ function updateQuestion() {
 			}//end if not OK
 			document.getElementById("loader").style.display = "none";
 			document.getElementById("container").style.display = "block";
+			if (jsonData.isLocationRelevant) document.getElementById("isLocationRelevant").style.display = "inline";
+			else document.getElementById("isLocationRelevant").style.display = "none";
 		}//end if ready
   	};//end if function()
   	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/currentQuestion?session=" + sessionID, true);
@@ -112,8 +114,12 @@ function answerQuestionMCQ(answer) {
 				}//end if finished
 				else if (jsonData.feedback == "incorrect") {
 					createSnackbar('✘ Incorrect ✘');
+					updateQuestion();
 				}//end if incorrect
-				else if (jsonData.feedback == "unknown or incorrect location") createSnackbar('✜ Incorrect Location ✜');
+				else if (jsonData.feedback == "unknown or incorrect location") {
+					createSnackbar('✜ Incorrect Location ✜');
+					updateQuestion();
+				}//end if bad location
 				else alert("Unexpected Problem");
 			}//end if ok
 			else createSnackbar(jsonData.status + " - " + jsonData.message);
@@ -146,8 +152,12 @@ function answerQuestionTxt() {
 				}//end if finished
 				else if (jsonData.feedback == "incorrect") {
 					createSnackbar('✘ Incorrect ✘');
+					updateQuestion();
 				}//end if incorrect
-				else if (jsonData.feedback == "unknown or incorrect location") createSnackbar('✜ Incorrect Location ✜');
+				else if (jsonData.feedback == "unknown or incorrect location") {
+					createSnackbar('✜ Incorrect Location ✜');
+					updateQuestion();
+				}//end if bad location
 				else alert("Unexpected Problem");
 			}//end if ok
 			else if (jsonData.status == "Invalid or missing parameters") createSnackbar('Your answer cannot be empty');

@@ -96,6 +96,16 @@ p {
 	animation:ease-in;
 }
 
+#isLocationRelevant {
+	display:none;
+	color:red;	
+	text-decoration:underline;
+}
+
+@media only screen and (max-width: 320px) {
+	small { font-size: 70%; }
+}
+
 /********************************************************************************
 									IMAGES
 *********************************************************************************/
@@ -380,7 +390,8 @@ ul.scoreBanner li a:hover:not(.active) { background-color: #8C8C8C; }
 	float:left;
 	padding-left:10px;
 	font-size:150%;
-	font-weight:700;	
+	font-weight:700;
+	margin-top: 20px;	
 }
 
 .currentPlayer { background-color:rgba(255,255,0,0.25); }
@@ -403,7 +414,7 @@ ul.scoreBanner li a:hover:not(.active) { background-color: #8C8C8C; }
 
 .timeFinished { color:grey; }
 
-.playerName { font-weight:700; }
+.playerName { font-weight:700; padding-top: 25px; }
 
 /********************************************************************************
 									BUBBLES
