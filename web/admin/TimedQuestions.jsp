@@ -81,7 +81,7 @@ You are not admin!
         <td><%= timedQuestion.getCreatedBy() %></td>
         <td><%= timedQuestion.getCategoryUUID() %> (<%= CategoryFactory.getCategory(timedQuestion.getCategoryUUID()).getName() %>)</td>
         <td><%= timedQuestion.getBody() %></td>
-        <td><%= timedQuestion.getImageUrl() %></td>
+        <td><a href="<%= timedQuestion.getImageUrl() %>" target="_blank"><%= timedQuestion.getImageUrl() %></a></td>
     </tr>
     <%
             }
@@ -99,7 +99,7 @@ You are not admin!
         </tr>
         <tr>
             <td>CREATED BY</td>
-            <td><%= userEmail %></td>
+            <td><%= userEmail %><input type="hidden" name="<%=TimedQuestionFactory.PROPERTY_CREATED_BY%>" value="<%= userEmail %>"></td>
         </tr>
         <tr>
             <td>CATEGORY</td>

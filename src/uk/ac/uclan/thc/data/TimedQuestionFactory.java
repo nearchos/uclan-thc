@@ -1,8 +1,6 @@
 package uk.ac.uclan.thc.data;
 
 import com.google.appengine.api.datastore.*;
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import uk.ac.uclan.thc.model.TimedQuestion;
 
 import java.util.Iterator;
@@ -27,30 +25,20 @@ public class TimedQuestionFactory
 
     static public TimedQuestion getTimedQuestion(final String keyAsString)
     {
-        final MemcacheService memcacheService = MemcacheServiceFactory.getMemcacheService();
-        if(memcacheService.contains(keyAsString))
+        final DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
+        try
         {
-            return (TimedQuestion) memcacheService.get(keyAsString);
+            final Entity timedQuestionEntity = datastoreService.get(KeyFactory.stringToKey(keyAsString));
+
+            final TimedQuestion timedQuestion = getFromEntity(timedQuestionEntity);
+
+            return timedQuestion;
         }
-        else
+        catch (EntityNotFoundException enfe)
         {
-            final DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
-            try
-            {
-                final Entity timedQuestionEntity = datastoreService.get(KeyFactory.stringToKey(keyAsString));
+            log.severe("Could not find " + KIND + " with key: " + keyAsString);
 
-                final TimedQuestion timedQuestion = getFromEntity(timedQuestionEntity);
-
-                memcacheService.put(keyAsString, timedQuestion); // add cache entry
-
-                return timedQuestion;
-            }
-            catch (EntityNotFoundException enfe)
-            {
-                log.severe("Could not find " + KIND + " with key: " + keyAsString);
-
-                return null;
-            }
+            return null;
         }
     }
 
@@ -59,7 +47,7 @@ public class TimedQuestionFactory
         final Vector<TimedQuestion> timedQuestions = new Vector<TimedQuestion>();
 
         final DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
-        final Query query = new Query(KIND);
+        final Query query = new Query(KIND).addSort(PROPERTY_TITLE);
         final PreparedQuery preparedQuery = datastoreService.prepare(query);
         final Iterable<Entity> iterable = preparedQuery.asIterable();
         final Iterator<Entity> iterator = iterable.iterator();
@@ -113,7 +101,7 @@ public class TimedQuestionFactory
         return datastoreService.put(timedQuestionEntity);
     }
 
-    static public void editQuestion(
+    static public void editTimedQuestion(
             final String uuid,
             final String title,
             final String createdBy,
@@ -131,8 +119,6 @@ public class TimedQuestionFactory
             timedQuestionEntity.setProperty(PROPERTY_BODY, body);
             timedQuestionEntity.setProperty(PROPERTY_IMAGE_URL, imageUrl);
             datastoreService.put(timedQuestionEntity);
-
-            MemcacheServiceFactory.getMemcacheService().delete(uuid); // invalidate cache entry
         }
         catch (EntityNotFoundException enfe)
         {

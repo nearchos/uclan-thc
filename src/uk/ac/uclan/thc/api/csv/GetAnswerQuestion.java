@@ -18,9 +18,11 @@
 package uk.ac.uclan.thc.api.csv;
 
 import uk.ac.uclan.thc.api.Protocol;
+import uk.ac.uclan.thc.data.CategoryFactory;
 import uk.ac.uclan.thc.data.LocationFingerprintFactory;
 import uk.ac.uclan.thc.data.QuestionFactory;
 import uk.ac.uclan.thc.data.SessionFactory;
+import uk.ac.uclan.thc.model.Category;
 import uk.ac.uclan.thc.model.LocationFingerprint;
 import uk.ac.uclan.thc.model.Question;
 import uk.ac.uclan.thc.model.Session;
@@ -136,13 +138,22 @@ public class GetAnswerQuestion extends HttpServlet
             {
                 final String currentQuestionUUID = session.getCurrentQuestionUUID();
                 final Question currentQuestion = QuestionFactory.getQuestion(currentQuestionUUID);
+                assert currentQuestion != null;
                 final String correctAnswer = currentQuestion.getCorrectAnswer();
 
                 final StringBuilder reply = new StringBuilder();
                 reply.append(Protocol.getCsvStatus("OK", "")).append(EOL); // OK status
 
-                // first check if the answer is correct
-                if(!answer.equalsIgnoreCase(correctAnswer))
+                // first check if the session is active
+                final Category category = CategoryFactory.getCategory(session.getCategoryUUID());
+                assert category != null;
+                if(!category.isActiveNow())
+                {
+                    // ignore reply builder, and output the error status/message and terminate
+                    printWriter.println(Protocol.getJsonStatus("Inactive category", "The specified category is not active"));
+                }
+                // next check if the answer is correct
+                else if(!answer.equalsIgnoreCase(correctAnswer))
                 {
                     SessionFactory.updateScoreAndKeepSessionToSameQuestion(sessionUUID, currentQuestion.getWrongScore());
                     reply.append("incorrect");

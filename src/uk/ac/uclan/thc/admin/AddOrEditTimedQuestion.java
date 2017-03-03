@@ -70,7 +70,7 @@ public class AddOrEditTimedQuestion extends HttpServlet
 
                 if(uuid != null && !uuid.isEmpty()) // editing existing category
                 {
-                    TimedQuestionFactory.editQuestion(uuid, title, createdBy, categoryUuid, body, imageUrl);
+                    TimedQuestionFactory.editTimedQuestion(uuid, title, createdBy, categoryUuid, body, imageUrl);
                 }
                 else // adding a new category
                 {

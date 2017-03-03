@@ -82,10 +82,13 @@ public class GetAnswerQuestion extends HttpServlet
             else
             {
                 final Category category = CategoryFactory.getCategory(session.getCategoryUUID());
-                if(category != null && !category.isActiveNow() && code != null && code.equals(category.getCode()))
+                assert category != null;
+                final boolean usingValidCode = code != null && code.equals(category.getCode());
+
+                if(((!category.isActiveNow()) && (!usingValidCode)) )
                 {
                     // ignore reply builder, and output the error status/message and terminate
-                    printWriter.println(Protocol.getJsonStatus("Inactive category", "The specified category is not active"));
+                    printWriter.println(Protocol.getJsonStatus("Inactive category", "The specified category is not active " + (code != null ? "(code: " + code + ")" : "(no code)")));
                 }
                 else
                 {

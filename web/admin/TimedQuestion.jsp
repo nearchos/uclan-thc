@@ -62,7 +62,7 @@
 <p>Got question: <%=timedQuestion.getTitle()%></p>
         <p>Back to <a href="/admin/all-timed-questions">all timed questions</a></p>
 
-        <form action="/admin/edit-question" method="post" onsubmit="editTimedQuestionButton.disabled = true; return true;">
+        <form action="/admin/edit-timed-question" method="post" onsubmit="editTimedQuestionButton.disabled = true; return true;">
             <table>
                 <tr>
                     <th>UUID</th>
@@ -74,7 +74,7 @@
                 </tr>
                 <tr>
                     <th>CREATED BY</th>
-                    <td><%=timedQuestion.getCreatedBy()%></td>
+                    <td><%= timedQuestion.getCreatedBy() %><input type="hidden" name="<%=TimedQuestionFactory.PROPERTY_CREATED_BY%>" value="<%= timedQuestion.getCreatedBy() %>"></td>
                 </tr>
                 <tr>
                     <th>CATEGORY</th>
