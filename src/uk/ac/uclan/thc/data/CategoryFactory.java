@@ -64,10 +64,8 @@ public class CategoryFactory
 
                 return category;
             }
-            catch (EntityNotFoundException enfe)
-            {
-                log.severe("Could not find " + KIND + " with key: " + keyAsString);
-
+            catch (EntityNotFoundException | IllegalArgumentException e) {
+                log.warning("Could not find " + KIND + " with key: " + keyAsString);
                 return null;
             }
         }
