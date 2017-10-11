@@ -70,12 +70,12 @@ public class GetStartQuiz extends HttpServlet
         final String code = request.getParameter("code"); // undocumented parameter; used only for testing a category before it becomes active
 
         final String playerName = request.getParameter("playerName");
-        final String appID      = request.getParameter("appID");
+        final String appID = request.getParameter("appID");
         final String categoryUUID = request.getParameter("categoryUUID");
+        final String teamEmail = request.getParameter("teamEmail");
         final String name1 = request.getParameter("name1");
         final String email1 = request.getParameter("email1");
         final String name2 = request.getParameter("name2");
-        final String email2 = request.getParameter("email2");
         final String installationID = request.getParameter("installationID");
         final String genderS = request.getParameter("gender");
         final String gender = "m".equalsIgnoreCase(genderS) ? "male" : "f".equalsIgnoreCase(genderS) ? "female" : "unknown";
@@ -103,7 +103,13 @@ public class GetStartQuiz extends HttpServlet
                 }
                 else
                 {
-                    final String sessionUUID = SessionFactory.getOrCreateSession(playerName, appID, categoryUUID, name1, email1, gender);
+                    final String sessionUUID = SessionFactory.getOrCreateSession(
+                            playerName,
+                            appID,
+                            categoryUUID,
+                            name1,
+                            teamEmail == null || teamEmail.isEmpty() ? email1 : teamEmail,
+                            gender);
 
                     if(sessionUUID == null)
                     {
@@ -115,12 +121,13 @@ public class GetStartQuiz extends HttpServlet
                         // everything ok
 
                         // first send an email for book-keeping
-                        if(name1 != null && !name1.isEmpty()) sendEmail(category.getCreatedBy(), category.getName(),
-                                                                        playerName, appID, categoryUUID, name1,
-                                                                        email1, name2, email2, request.getRemoteAddr(), installationID);
+                        if(name1 != null && !name1.isEmpty()) {
+//                            sendEmail(category.getCreatedBy(), category.getName(), playerName, teamEmail, appID, categoryUUID, name1, name2, request.getRemoteAddr(), installationID);
+                        }
+
                         // next send an email to the player
                         final String secret = sessionUUID.substring(sessionUUID.length() - 4);
-                        sendEmail(playerName, name1, email1, category, secret);
+//                        sendEmail(playerName, name1, email1, category, secret);
 
 
                         // finally prepare and send the reply
@@ -136,11 +143,11 @@ public class GetStartQuiz extends HttpServlet
         }
     }
 
-    private void sendEmail(final String categoryCreatedByEmail, final String categoryName,
-                           final String teamName, final String appID, final String categoryUUID, final String name1,
-                           final String email1, final String name2, final String email2,
-                           final String senderIP, final String installationID)
-    {
+//    private void sendEmail(final String categoryCreatedByEmail, final String categoryName,
+//                           final String teamName, final String appID, final String categoryUUID, final String name1,
+//                           final String email1, final String name2, final String email2,
+//                           final String senderIP, final String installationID)
+//    {
 //        final Session session = Session.getDefaultInstance(new Properties(), null);
 //        try
 //        {
@@ -179,10 +186,10 @@ public class GetStartQuiz extends HttpServlet
 //        {
 //            log.severe(uee.getMessage());
 //        }
-    }
+//    }
 
-    private void sendEmail(final String teamName, final String name1, final String email1, final Category category, final String secret)
-    {
+//    private void sendEmail(final String teamName, final String name1, final String email1, final Category category, final String secret)
+//    {
 //        final Session session = Session.getDefaultInstance(new Properties(), null);
 //        try
 //        {
@@ -217,5 +224,5 @@ public class GetStartQuiz extends HttpServlet
 //        {
 //            log.severe(uee.getMessage());
 //        }
-    }
+//    }
 }
