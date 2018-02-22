@@ -106,7 +106,7 @@ You are not logged in!
         </td>
         <td>
                 <div>
-                    <input type="button" value="Live map" onclick="window.open('/live/map.jsp?<%=CategoryFactory.PROPERTY_UUID%>=<%=category.getUUID()%>')" />
+                    <input type="button" value="Live map" onclick="window.open('/live/map2.jsp?<%=CategoryFactory.PROPERTY_UUID%>=<%=category.getUUID()%>')" />
                 </div>
         </td>
         <td>

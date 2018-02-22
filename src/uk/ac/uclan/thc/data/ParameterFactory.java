@@ -1,6 +1,7 @@
 package uk.ac.uclan.thc.data;
 
 import com.google.appengine.api.datastore.*;
+import uk.ac.uclan.thc.model.Category;
 import uk.ac.uclan.thc.model.Parameter;
 
 import java.util.Vector;
@@ -18,13 +19,24 @@ public class ParameterFactory {
 
     static public Parameter getParameter(final String keyAsString) {
         final DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
-        try {
-            final Entity parameterEntity = datastoreService.get(KeyFactory.stringToKey(keyAsString));
-            return getFromEntity(parameterEntity);
-        } catch (EntityNotFoundException | IllegalArgumentException e) {
-            log.warning("Could not find " + KIND + " with key: " + keyAsString);
-            return null;
+        final Query query = new Query(KIND);
+        final Query.Filter filterCode = new Query.FilterPredicate(
+                PROPERTY_KEY,
+                Query.FilterOperator.EQUAL,
+                keyAsString);
+        query.setFilter(filterCode);
+        final PreparedQuery preparedQuery = datastoreService.prepare(query);
+        final Vector<uk.ac.uclan.thc.model.Parameter> parameters = new Vector<>();
+        for(final Entity entity : preparedQuery.asIterable()) {
+            parameters.add(getFromEntity(entity));
         }
+
+        return parameters.isEmpty() ? null : parameters.get(0);
+    }
+
+    static public String getParameterValueWithDefault(final String keyAsString, final String defaultValue) {
+        final Parameter parameter = getParameter(keyAsString);
+        return parameter == null ? defaultValue : parameter.getValue();
     }
 
     static public Vector<Parameter> getAllParameters() {

@@ -159,11 +159,7 @@
 <script>
     Vue.use(VueGoogleMaps, {
         load: {
-            <%
-                final Parameter parameter = ParameterFactory.getParameter("GOOGLE_MAPS_KEY");
-                final String googleMapsKey = parameter == null ? "undefined" : parameter.getValue();
-            %>
-            key: '<%=googleMapsKey%>',
+            key: '<%=ParameterFactory.getParameterValueWithDefault("GOOGLE_MAPS_KEY", "undefined")%>',
             v: '3.30'
         }
     });
@@ -293,18 +289,8 @@
             }
         },
 
-        //todo eliminate hardcoded values by introducing /admin/parameters API for GMaps, Ably
         created: function () {
-            <%
-            final Parameter parameter = ParameterFactory.getParameter("ABLY_PUBLIC_KEY");
-            if(parameter == null) {
-                final Logger log = Logger.getLogger(getClass().getSimpleName());
-                log.severe("Could not fine parameter for 'ABLY_PUBLIC_KEY'");
-            }
-            final String ablyPublicKey = parameter == null ? "undefined" : parameter.getKey();
-
-            %>
-            var ably = new Ably.Realtime('<%= ablyPublicKey %>'),
+            var ably = new Ably.Realtime('<%= ParameterFactory.getParameterValueWithDefault("ABLY_PUBLIC_KEY", "undefined") %>'),
                 channel = ably.channels.get('category-<%= request.getParameter("uuid") %>'),
                 vm = this;
 

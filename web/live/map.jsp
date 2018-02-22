@@ -50,12 +50,8 @@
             overflow: auto;
         }
     </style>
-    <%
-        final Parameter parameter = ParameterFactory.getParameter("GOOGLE_MAPS_KEY");
-        final String googleMapsKey = parameter == null ? "undefined" : parameter.getValue();
-    %>
     <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=<%=googleMapsKey%>&sensor=false">
+            src="https://maps.googleapis.com/maps/api/js?key=<%= ParameterFactory.getParameterValueWithDefault("GOOGLE_MAPS_KEY", "undefined") %>&sensor=false">
     </script>
     <script type="text/javascript">
 

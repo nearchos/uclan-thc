@@ -63,18 +63,6 @@
             </ul>
         </p>
         <br/>
-        <table>
-            <tr><td><b>Key</b></td><td><b>Value</b></td></tr>
-<%
-        for(final Parameter parameter : parameters) {
-%>
-            <tr><td><b><%=parameter.getKey()%></b></td><td><b><%=parameter.getValue()%></b></td></tr>
-<%
-        }
-%>
-        </table>
-
-        <hr/>
 
         <hr/>
         <h2>Parameters</h2>
