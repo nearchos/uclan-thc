@@ -73,7 +73,7 @@ public class Category implements Serializable
         return now > validUntil;
     }
 
-    public long getValidUntil() // todo investigate if this is used or not
+    public long getValidUntil()
     {
         return validUntil;
     }
@@ -102,5 +102,4 @@ public class Category implements Serializable
     {
         return SIMPLE_DATE_FORMAT.format(new Date(validUntil));
     }
-
 }

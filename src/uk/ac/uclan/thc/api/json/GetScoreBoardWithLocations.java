@@ -72,6 +72,7 @@ public class GetScoreBoardWithLocations extends HttpServlet
             reply.append("  \"categoryName\": \"").append(category.getName()).append("\",").append(EOL); // OK status
             reply.append("  \"validFrom\": ").append(category.getValidFrom()).append(",").append(EOL); // OK status
             reply.append("  \"validUntil\": ").append(category.getValidUntil()).append(",").append(EOL); // OK status
+            reply.append("  \"category\": { \"name\": \"").append(category.getName()).append("\", \"validFrom\": ").append(category.getValidFrom()).append(", \"validUntil\": ").append(category.getValidUntil()).append("}, ").append(EOL);
             reply.append("  \"scoreBoard\": [").append(EOL); // OK status
             for(int i = 0; i < sessions.size(); i++)
             {
@@ -81,6 +82,7 @@ public class GetScoreBoardWithLocations extends HttpServlet
                 double lng = locationFingerprint == null ? 0d : locationFingerprint.getLng();
 
                 reply.append("  {").append(EOL);
+                reply.append("    \"uuid\": \"").append(sessionInCategory.getUUID()).append("\",").append(EOL);
                 reply.append("    \"appID\": \"").append(sessionInCategory.getAppID()).append("\",").append(EOL);
                 reply.append("    \"playerName\": \"").append(sessionInCategory.getPlayerName()).append("\",").append(EOL);
                 reply.append("    \"score\": ").append(sessionInCategory.getScore()).append(",").append(EOL);

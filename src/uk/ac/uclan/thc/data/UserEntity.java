@@ -102,7 +102,7 @@ public class UserEntity
             log.info("Could not find user with email: " + email);
             return null;
         }
-        else if(userEntities.size() == 1) // todo
+        else if(userEntities.size() == 1)
         {
             return new UserEntity(userEntities.get(0));
         }

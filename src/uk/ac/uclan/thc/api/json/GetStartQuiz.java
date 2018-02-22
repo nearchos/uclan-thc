@@ -34,10 +34,15 @@
 
 package uk.ac.uclan.thc.api.json;
 
+import io.ably.lib.rest.AblyRest;
+import io.ably.lib.rest.Channel;
+import io.ably.lib.types.AblyException;
 import uk.ac.uclan.thc.api.Protocol;
 import uk.ac.uclan.thc.data.CategoryFactory;
+import uk.ac.uclan.thc.data.ParameterFactory;
 import uk.ac.uclan.thc.data.SessionFactory;
 import uk.ac.uclan.thc.model.Category;
+import uk.ac.uclan.thc.model.Parameter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -129,6 +134,31 @@ public class GetStartQuiz extends HttpServlet
                         final String secret = sessionUUID.substring(sessionUUID.length() - 4);
 //                        sendEmail(playerName, name1, email1, category, secret);
 
+                        // ably push
+                        try {
+                            double lat = 0d;
+                            double lng = 0d;
+
+                            final Parameter parameter = ParameterFactory.getParameter("ABLY_PRIVATE_KEY");
+                            if(parameter != null) {
+                                final String ablyKey = parameter.getValue();
+                                final AblyRest ably = new AblyRest(ablyKey);
+                                final Channel channel = ably.channels.get("category-" + categoryUUID);
+                                final String json = "  {" + EOL +
+                                        "    \"uuid\": \"" + sessionUUID + "\"," + EOL +
+                                        "    \"appID\": \"" + appID + "\"," + EOL +
+                                        "    \"playerName\": \"" + playerName + "\"," + EOL +
+                                        "    \"score\": " + 0 + "," + EOL +
+                                        "    \"finishTime\": " + 0 + "," + EOL +
+                                        "    \"lat\": " + lat + "," + EOL +
+                                        "    \"lng\": " + lng + "" + EOL +
+                                        "  }" + EOL;
+                                io.ably.lib.types.Message[] messages = new io.ably.lib.types.Message[]{new io.ably.lib.types.Message("new_session", json)};
+                                channel.publish(messages);
+                            }
+                        } catch (AblyException ae) {
+                            log.severe("Ably error: " + ae.errorInfo);
+                        }
 
                         // finally prepare and send the reply
                         String reply = "{" + EOL +

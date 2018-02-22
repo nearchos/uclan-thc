@@ -320,6 +320,26 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>Parameters</servlet-name>
+        <jsp-file>/admin/Parameters.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Parameters</servlet-name>
+        <url-pattern>/admin/parameters</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AddOrEditParameter</servlet-name>
+        <servlet-class>uk.ac.uclan.thc.admin.AddParameter</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AddOrEditParameter</servlet-name>
+        <url-pattern>/admin/add-parameter</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>AddOrEditCategory</servlet-name>
         <servlet-class>uk.ac.uclan.thc.admin.AddOrEditCategory</servlet-class>
     </servlet>

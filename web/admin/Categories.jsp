@@ -61,6 +61,8 @@ You are not logged in!
 
 <h1>Categories</h1>
 
+<p>View <a href="/admin/parameters">Parameters</a></p>
+
 <p>Number of categories: <%=categories.size()%></p>
 
 <table border="1">
@@ -104,7 +106,7 @@ You are not logged in!
         </td>
         <td>
                 <div>
-                    <input type="button" value="Live map" onclick="window.open('/live/map.html?<%=CategoryFactory.PROPERTY_UUID%>=<%=category.getUUID()%>')" />
+                    <input type="button" value="Live map" onclick="window.open('/live/map.jsp?<%=CategoryFactory.PROPERTY_UUID%>=<%=category.getUUID()%>')" />
                 </div>
         </td>
         <td>

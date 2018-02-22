@@ -15,29 +15,18 @@
  *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * This file is part of UCLan-THC server.
- *
- *     UCLan-THC server is free software: you can redistribute it and/or
- *     modify it under the terms of the GNU General Public License as
- *     published by the Free Software Foundation, either version 3 of
- *     the License, or (at your option) any later version.
- *
- *     UCLan-THC server is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package uk.ac.uclan.thc.api.json;
 
 import com.google.appengine.api.datastore.Key;
+import io.ably.lib.rest.AblyRest;
+import io.ably.lib.rest.Channel;
+import io.ably.lib.types.AblyException;
+import io.ably.lib.types.Message;
 import uk.ac.uclan.thc.api.Protocol;
 import uk.ac.uclan.thc.data.LocationFingerprintFactory;
+import uk.ac.uclan.thc.data.ParameterFactory;
 import uk.ac.uclan.thc.data.SessionFactory;
+import uk.ac.uclan.thc.model.Parameter;
 import uk.ac.uclan.thc.model.Session;
 
 import javax.servlet.ServletException;
@@ -95,13 +84,34 @@ public class GetUpdateLocation extends HttpServlet
                             "  \"status\": \"OK\"" + EOL + // OK status
                             "}" + EOL;
 
-                    printWriter.println(reply // OK status
-                    ); // normal JSON output
+                    // ably push
+                    final Parameter parameter = ParameterFactory.getParameter("ABLY_PRIVATE_KEY");
+                    if(parameter != null) {
+                        final String ablyKey = parameter.getValue();
+                        final AblyRest ably = new AblyRest(ablyKey);
+                        final Channel channel = ably.channels.get("category-" + session.getCategoryUUID());
+                        final String json = "  {" + EOL +
+                                "    \"uuid\": \"" + session.getUUID() + "\"," + EOL +
+                                "    \"appID\": \"" + session.getAppID() + "\"," + EOL +
+                                "    \"playerName\": \"" + session.getPlayerName() + "\"," + EOL +
+                                "    \"score\": " + session.getScore() + "," + EOL +
+                                "    \"finishTime\": " + session.getFinishTime() + "," + EOL +
+                                "    \"lat\": " + lat + "," + EOL +
+                                "    \"lng\": " + lng + "" + EOL +
+                                "  }" + EOL;
+                        final Message [] messages = new Message[]{new Message("session_update", json)};
+                        channel.publish(messages);
+                    }
+                    printWriter.println(reply); // normal JSON output
                 }
                 catch (NumberFormatException nfe)
                 {
                     // ignore reply builder, and output the error status/message and terminate
                     printWriter.println(Protocol.getJsonStatus("Invalid parameters", "The parameters 'lat' and 'lng' must be real numbers (e.g. 33.15)"));
+                }
+                catch (AblyException ae)
+                {
+                    printWriter.println(Protocol.getJsonStatus("Ably problem", ae.errorInfo.message));
                 }
             }
         }

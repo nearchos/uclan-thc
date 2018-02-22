@@ -9,6 +9,11 @@
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="AppEngine API" />
+          <element id="library" level="project" name="com.google.appengine:appengine-api-1.0-sdk:Release" />
+          <element id="library" level="project" name="javax.servlet:servlet-api:2.5" />
+          <element id="library" level="project" name="ably-java-1.0.1" />
+          <element id="library" level="project" name="com.google.code.gson:gson:2.8.2" />
+          <element id="library" level="project" name="org.msgpack:msgpack-core:0.8.11" />
         </element>
       </element>
     </root>

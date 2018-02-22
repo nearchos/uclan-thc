@@ -22,9 +22,15 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import io.ably.lib.rest.AblyRest;
+import io.ably.lib.rest.Channel;
+import io.ably.lib.types.AblyException;
+import io.ably.lib.types.Message;
 import uk.ac.uclan.thc.data.CategoryFactory;
+import uk.ac.uclan.thc.data.ParameterFactory;
 import uk.ac.uclan.thc.data.UserEntity;
 import uk.ac.uclan.thc.model.Category;
+import uk.ac.uclan.thc.model.Parameter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -33,6 +39,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.logging.Logger;
+
+import static uk.ac.uclan.thc.api.Protocol.EOL;
 
 /**
  * User: Nearchos Paspallis
@@ -71,11 +79,18 @@ public class AddOrEditCategory extends HttpServlet
                 try
                 {
                     validFrom = Category.SIMPLE_DATE_FORMAT.parse(request.getParameter(CategoryFactory.PROPERTY_VALID_FROM)).getTime();
-                    validUntil = Category.SIMPLE_DATE_FORMAT.parse(request.getParameter(CategoryFactory.PROPERTY_VALID_UNTIL)).getTime();
                 }
                 catch (ParseException pe)
                 {
                     validFrom = 0L;
+                    log.warning(pe.getMessage());
+                }
+                try
+                {
+                    validUntil = Category.SIMPLE_DATE_FORMAT.parse(request.getParameter(CategoryFactory.PROPERTY_VALID_UNTIL)).getTime();
+                }
+                catch (ParseException pe)
+                {
                     validUntil = 0L;
                     log.warning(pe.getMessage());
                 }
@@ -85,6 +100,25 @@ public class AddOrEditCategory extends HttpServlet
                 if(uuid != null && !uuid.isEmpty()) // editing existing category
                 {
                     CategoryFactory.editCategory(uuid, name, createdBy, validFrom, validUntil, code == null ? "" : code, locationUUID == null ? "" : locationUUID);
+
+                    try {
+                        // ably push
+                        final Parameter parameter = ParameterFactory.getParameter("ABLY_PRIVATE_KEY");
+                        if(parameter != null) {
+                            final String ablyKey = parameter.getValue();
+                            final AblyRest ably = new AblyRest(ablyKey);
+                            final Channel channel = ably.channels.get("category-" + uuid);
+                            final String json = "  {" + EOL +
+                                    "    \"name\": \"" + name + "\"," + EOL +
+                                    "    \"validFrom\": " + validFrom + "," + EOL +
+                                    "    \"validUntil\": " + validUntil + EOL +
+                                    "  }" + EOL;
+                            final Message [] messages = new Message[] {new Message("category_update", json)};
+                            channel.publish(messages);
+                        }
+                    } catch (AblyException ae) {
+                        log.severe("Ably problem: " + ae.errorInfo.message);
+                    }
                 }
                 else // adding a new category
                 {

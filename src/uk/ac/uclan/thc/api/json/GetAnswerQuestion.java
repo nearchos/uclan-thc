@@ -17,15 +17,12 @@
 
 package uk.ac.uclan.thc.api.json;
 
+import io.ably.lib.rest.AblyRest;
+import io.ably.lib.rest.Channel;
+import io.ably.lib.types.AblyException;
 import uk.ac.uclan.thc.api.Protocol;
-import uk.ac.uclan.thc.data.CategoryFactory;
-import uk.ac.uclan.thc.data.LocationFingerprintFactory;
-import uk.ac.uclan.thc.data.QuestionFactory;
-import uk.ac.uclan.thc.data.SessionFactory;
-import uk.ac.uclan.thc.model.Category;
-import uk.ac.uclan.thc.model.LocationFingerprint;
-import uk.ac.uclan.thc.model.Question;
-import uk.ac.uclan.thc.model.Session;
+import uk.ac.uclan.thc.data.*;
+import uk.ac.uclan.thc.model.*;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -140,6 +137,33 @@ public class GetAnswerQuestion extends HttpServlet
                     {
                         final Session revisedSession = SessionFactory.getSession(sessionUUID);
                         score = revisedSession != null ? revisedSession.getScore() : 0L;
+                    }
+
+                    // ably push
+                    try {
+                        final LocationFingerprint locationFingerprint = LocationFingerprintFactory.getLastLocationFingerprintBySessionUUID(session.getUUID());
+                        double lat = locationFingerprint == null ? 0d : locationFingerprint.getLat();
+                        double lng = locationFingerprint == null ? 0d : locationFingerprint.getLng();
+
+                        final Parameter parameter = ParameterFactory.getParameter("ABLY_PRIVATE_KEY");
+                        if(parameter != null) {
+                            final String ablyKey = parameter.getValue();
+                            final AblyRest ably = new AblyRest(ablyKey);
+                            final Channel channel = ably.channels.get("category-" + session.getCategoryUUID());
+                            final String json = "  {" + EOL +
+                                    "    \"uuid\": \"" + session.getUUID() + "\"," + EOL +
+                                    "    \"appID\": \"" + session.getAppID() + "\"," + EOL +
+                                    "    \"playerName\": \"" + session.getPlayerName() + "\"," + EOL +
+                                    "    \"score\": " + session.getScore() + "," + EOL +
+                                    "    \"finishTime\": " + session.getFinishTime() + "," + EOL +
+                                    "    \"lat\": " + lat + "," + EOL +
+                                    "    \"lng\": " + lng + "" + EOL +
+                                    "  }" + EOL;
+                            io.ably.lib.types.Message[] messages = new io.ably.lib.types.Message[]{new io.ably.lib.types.Message("session_update", json)};
+                            channel.publish(messages);
+                        }
+                    } catch (AblyException ae) {
+                        log.severe("Ably error: " + ae.errorInfo);
                     }
 
                     reply.append("  \"feedback\": \"").append(feedback).append("\",").append(EOL); // OK status

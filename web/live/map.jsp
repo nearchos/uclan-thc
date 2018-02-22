@@ -1,3 +1,5 @@
+<%@ page import="uk.ac.uclan.thc.data.ParameterFactory" %>
+<%@ page import="uk.ac.uclan.thc.model.Parameter" %>
 <!DOCTYPE html>
 <!--
   ~ This file is part of UCLan-THC server.
@@ -48,8 +50,12 @@
             overflow: auto;
         }
     </style>
+    <%
+        final Parameter parameter = ParameterFactory.getParameter("GOOGLE_MAPS_KEY");
+        final String googleMapsKey = parameter == null ? "undefined" : parameter.getValue();
+    %>
     <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdipAJNm39K_JUFg7Tk2nuTNi0QuYK9OI&sensor=false">
+            src="https://maps.googleapis.com/maps/api/js?key=<%=googleMapsKey%>&sensor=false">
     </script>
     <script type="text/javascript">
 
@@ -147,18 +153,6 @@
             // The custom USGSOverlay object contains the USGS image,
             // the bounds of the image, and a reference to the map.
             overlay = new USGSOverlay(bounds, srcImage, map);
-
-            // kroisou todo delete
-            var swBound1 = new google.maps.LatLng(35.136140, 33.363622);
-            var neBound1 = new google.maps.LatLng(35.136355, 33.363799);
-            var bounds1 = new google.maps.LatLngBounds(swBound1, neBound1);
-
-            // The photograph is courtesy of the U.S. Geological Survey.
-            var srcImage1 = 'http://nearchos.aspectsense.com/kroisou.png';
-
-            // The custom USGSOverlay object contains the USGS image,
-            // the bounds of the image, and a reference to the map.
-            overlay = new USGSOverlay(bounds1, srcImage1, map);
         }
         google.maps.event.addDomListener(window, 'load', initialize);
 
