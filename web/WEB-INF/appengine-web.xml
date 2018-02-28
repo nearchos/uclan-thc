@@ -39,6 +39,7 @@
         <include path="/live/*.html" />
         <include path="/live/vue-google-maps.js" />
         <include path="/live/uclan_small.png" />
+        <include path="/live/map-markers/*.png" />
     </static-files>
 
 </appengine-web-app>
