@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
-    <title>Treasure hunt challange map</title>
+    <title>Treasure hunt challenge map</title>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
@@ -14,22 +14,26 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.min.js"></script>
     <script src="/live/vue-google-maps.js"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
     <style>
         /* Copied */
 
-        html {
-            height: 100%
+        html, body {
+            height: 100%;
+            overflow-y: hidden;
         }
 
-        body {
+        /* Custom/modified */
+
+        .map-parent {
             height: 100%;
-            margin: 0;
-            padding: 0
+            width: 100%;
         }
 
         #scoreboard {
             position: absolute;
-            width: 400px;
+            width: 480px;
             top: 20px;
             bottom: 20px;
             right: 20px;
@@ -37,49 +41,66 @@
             text-align: center;
             border: 2px solid #bbb;
             border-radius: 10px;
-            overflow: auto;
+            overflow-y: hidden;
         }
-
-        /* Extracted */
 
         #teams {
             padding: 10px;
         }
 
-        #header-container {
-            margin: 0 auto;
-            width: 350px;
-            text-align: center;
-        }
-
-        #category-title {
-            font-family: sans-serif;
-            color: #CE0E41;
-            font-weight: bold;
-            font-size: 28px;
-        }
-
-        #category-status {
-            font-family: sans-serif;
-            font-weight: bolder;
-            font-size: 16px;
-            color: #f00;
-        }
-
         #teams table {
             font-size: 20px;
-            padding: 10px;
+            margin-bottom: 0;
         }
 
-        #teams table th, #teams table td {
-            width: 100px;
+        #teams .player-icon {
+            width: 25px;
+            padding-bottom: 0;
+            padding-right: 0;
+            padding-left: 5px;
         }
 
-        /* Custom */
+        #uclan-logo {
+            width: 192px;
+            height: 180px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
 
-        .map-parent {
-            height: 100%;
-            width: 100%;
+            border: 2px solid #bbb;
+            border-radius: 10px;
+
+            padding: 5px;
+            background: white;
+        }
+
+        #header-wrap {
+            top: 20px;
+            left: 50%;
+            position: absolute;
+
+            z-index: 10;
+        }
+        #header {
+            position: relative;
+            left: -50%;
+
+            width: 500px;
+            padding: 7px;
+            text-align: center;
+
+            border: 2px solid #bbb;
+            border-radius: 10px;
+            background: white;
+        }
+        #category-title {
+            color: #CE0E41;
+            font-size: 40px;
+        }
+        #category-status {
+            font-family: sans-serif;
+            font-size: 22px;
         }
 
         /* Scoreboard animations */
@@ -108,45 +129,51 @@
 
 <script type="text/x-template" id="app-template">
     <div class="map-parent">
+        <img id="uclan-logo" src="/live/uclan_small.png" alt="UCLan Cyprus logo" />
+
+        <template v-if="isLoaded">
+            <div id="header-wrap">
+                <div id="header">
+                    <h1 id="category-title">{{ category.name }}</h1>
+                    <category-status :category="category"></category-status>
+                </div>
+            </div>
+        </template>
+
         <gmap-map style="width: 100%; height: 100%;"
             :center="{lat: 35.008154, lng: 33.6975}"
             :zoom="19"
             :options="mapOptions"
+            mapTypeId="satellite"
         >
-
-            <gmap-marker :key="'marker-' + marker.session_id" v-for="marker in mapMarkers" :position="marker.position" :clickable="false"></gmap-marker>
-            <gmap-info-window :position="marker.position" :key="'info-' + marker.session_id" v-for="marker in mapMarkers" :options="infoWindowOptions">
-                <h3>{{ marker.player_name }}</h3>
-                <p style="color: #CE0E41">{{ marker.score }} pts</p>
-            </gmap-info-window>
-
+            <gmap-marker :key="'marker-' + marker.session_id" v-for="marker in mapMarkers"
+                :position="marker.position" :clickable="false" :icon="marker.icon" />
         </gmap-map>
 
         <div id="scoreboard">
-            <img src="/live/uclan_small.png" alt="UCLan Cyprus logo" />
             <div id="teams">
                 <template v-if="!isLoaded">
                     Loading...
                 </template>
                 <template v-else>
-                    <div id="header-container">
-                        <h1 id="category-title">{{ category.name }}</h1>
-                        <div id="category-status">{{ categoryStatus }}</div>
-                    </div>
-                    <table align="center">
-                        <transition-group tag="tbody" :name="animate ? 'animated-table-body' : 'static-content'">
-                            <tr key="header">
+                    <table align="center" class="table is-narrow is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th class="player-icon"></th>
                                 <th>Player</th>
-                                <%--<th>App ID</th>--%>
-                                <th>Score</th>
-                                <th>Finished</th>
+                                <!--<th>App ID</th>-->
+                                <th style="width: 72px; text-align: right">Score</th>
+                                <th style="width: 125px; text-align: right">Finish time</th>
                             </tr>
+                        </thead>
 
+                        <transition-group tag="tbody" :name="animate ? 'animated-table-body' : 'static-content'">
                             <tr v-for="session in sortedList" :key="'row-' + session.uuid">
-                                <td>{{ session.playerName }}</td>
-                                <%--<td>{{ session.appId }}</td>--%>
-                                <td>{{ session.score }}</td>
-                                <td>{{ finishedStatus(session.finishTime) }}</td>
+                                <td class="player-icon"><img :src="mapIconUrl(session)" /></td>
+                                <td>{{ session.playerName | truncate(23) }}</td>
+                                <!--<td>{{ session.appId }}</td>-->
+                                <td style="width: 72px; text-align: right">{{ session.score }}</td>
+                                <td style="width: 125px; text-align: right">{{ finishedStatus(session.finishTime) }}</td>
                             </tr>
                         </transition-group>
                     </table>
@@ -172,6 +199,107 @@
         };
     };
 
+    var padWithZeroes = function (number, minLength) {
+        number = number.toString();
+        var length = number.length;
+
+        if (length >= minLength) {
+            return number;
+        }
+
+        return Array(minLength - length + 1).join('0') + number;
+    };
+
+    var formatDuration = function (moment) {
+        var returnStr = '';
+
+        returnStr += padWithZeroes(moment.minutes(), 2) + ":";
+        returnStr += padWithZeroes(moment.seconds(), 2);
+
+        return returnStr;
+    };
+
+    Vue.component('category-status', {
+        props: {
+            category: {
+                type: Object,
+                required: true
+            }
+        },
+        render: function (createElement) {
+            return createElement(
+                'div', {attrs: {id: 'category-status'}}, 'Category status'
+            )
+        },
+        mounted: function () {
+            var vm = this;
+
+            this.intervalId = setInterval(function () {
+                var now = moment(),
+                    result = '';
+
+                if (now.isAfter(vm.category.end)) {
+                    result = 'Ended ' + vm.category.end.from(now);
+                } else if (now.isAfter(vm.category.start)) {
+                    var diff = vm.category.end.diff(now);
+
+                    if (diff < 300000) { // 5 minutes
+                        result = 'Ending in ' + formatDuration(moment.duration(diff));
+                    } else {
+                        result = 'Ending ' + vm.category.end.from(now);
+                    }
+                } else {
+                    var diff = vm.category.start.diff(now);
+
+                    if (diff < 300000) { // 5 minutes
+                        result = 'Going live in ' + formatDuration(moment.duration(diff));
+                    } else {
+                        result = 'Going live ' + vm.category.start.from(now);
+                    }
+                }
+
+                vm.$el.innerHTML = result;
+            }, 1);
+        },
+
+        beforeDestroy: function () {
+            clearInterval(this.intervalId);
+        }
+    });
+
+    // Based on https://github.com/imcvampire/vue-truncate-filter/blob/master/vue-truncate.js
+    Vue.filter('truncate', function (text, length, clamp) {
+        clamp = clamp || '...';
+        length = length || 30;
+
+        if (text.length <= length) return text;
+
+        var tcText = text.slice(0, length - clamp.length),
+            last = tcText.length - 1,
+            rewind = 0;
+
+        while (last > 0 && tcText[last] !== ' ' && tcText[last] !== clamp[0]) {
+            last--;
+            rewind++;
+        }
+
+        if (last === 0) {
+            // Fix for case when text don't have any `space`
+            last = length - clamp.length;
+        } else if (rewind > 2) {
+            // Truncate in middle of word if we can keep 2 characters
+            last += rewind;
+        }
+
+        return tcText.slice(0, last) + clamp;
+    });
+
+    var mapLabels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        mapColours = ['red', 'yellow', 'green', 'orange'],
+        nextMapLabelIndex = 0,
+        nextMapColourIndex = 0,
+        mapIconsMap = {}; // naming is hard....
+
     new Vue({
         el: '#vue-app',
         template: '#app-template',
@@ -182,10 +310,6 @@
                 start: null,
                 end: null
             },
-
-            // Force Vue to recompute status every 1000 ms (see mounted())
-            // intervalId should not be reactive and thus is not defined here
-            now: moment(),
 
             // Rendering control
             animate: false,
@@ -235,25 +359,15 @@
                             return 1;
                         }
 
-                        // Bother are zero or not
+                        // Both are zero or not
                         return a.finishTime < b.finishTime ? -1 : 1;
                     })
-                    .slice(0, 10);
-            },
-
-            categoryStatus: function () {
-                if (this.now.isAfter(this.category.end)) {
-                    return 'Ended ' + this.category.end.from(this.now);
-                }
-
-                if (this.now.isAfter(this.category.start)) {
-                    return 'Ending ' + this.category.end.from(this.now);
-                }
-
-                return 'Going live ' + this.category.start.from(this.now);
+                    .slice(0, 21);
             },
 
             mapMarkers: function () {
+                var vm = this;
+
                 return this.sessions
                     .filter(function (session) {
                         return session.lat !== 0 && session.lng !== 0;
@@ -266,6 +380,9 @@
                             position: {
                                 lat: session.lat,
                                 lng: session.lng
+                            },
+                            icon: {
+                                url: vm.mapIconUrl(session)
                             }
                         }
                     })
@@ -275,17 +392,37 @@
         methods : {
             finishedStatus: function (duration) {
                 if (duration === 0) {
-                    return 'No';
+                    return 'Not yet';
                 }
 
                 duration = moment.duration(duration);
                 var returnStr = '';
 
-                returnStr += duration.minutes() + ":";
-                returnStr += duration.seconds() + ".";
-                returnStr += duration.milliseconds();
+                returnStr += padWithZeroes(duration.minutes(), 2) + ":";
+                returnStr += padWithZeroes(duration.seconds(), 2) + ".";
+                returnStr += padWithZeroes(duration.milliseconds(), 3);
 
                 return returnStr;
+            },
+
+            mapIconUrl: function (session) {
+                if (!mapIconsMap.hasOwnProperty(session.uuid)) {
+                    mapIconsMap[session.uuid] = {
+                        label: mapLabels[nextMapLabelIndex],
+                        colour: mapColours[nextMapColourIndex]
+                    };
+
+                    nextMapLabelIndex++;
+
+                    if (nextMapLabelIndex >= mapLabels.length) {
+                        nextMapLabelIndex = 0;
+                        nextMapColourIndex++;
+                    }
+                }
+
+                var icon = mapIconsMap[session.uuid];
+
+                return '/live/map-markers/' + icon.colour + '_Marker' + icon.label + '.png';
             }
         },
 
@@ -350,18 +487,6 @@
                         break;
                 }
             });
-        },
-
-        mounted: function () {
-            var vm = this;
-
-            this.intervalId = setInterval(function () {
-                vm.now = moment();
-            }, 1000);
-        },
-
-        beforeDestroy: function () {
-            clearInterval(this.intervalId);
         }
     })
 </script>
