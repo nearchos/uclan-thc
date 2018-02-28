@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Logger;
 
 import static uk.ac.uclan.thc.api.Protocol.EOL;
 
@@ -47,6 +48,8 @@ import static uk.ac.uclan.thc.api.Protocol.EOL;
  */
 public class GetUpdateLocation extends HttpServlet
 {
+    public static final Logger log = Logger.getLogger(GetUpdateLocation.class.getCanonicalName());
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         response.setContentType("text/plain; charset=utf-8");
@@ -84,6 +87,8 @@ public class GetUpdateLocation extends HttpServlet
                             "  \"status\": \"OK\"" + EOL + // OK status
                             "}" + EOL;
 
+                    printWriter.println(reply); // normal JSON output
+
                     // ably push
                     final Parameter parameter = ParameterFactory.getParameter("ABLY_PRIVATE_KEY");
                     if(parameter != null) {
@@ -102,7 +107,6 @@ public class GetUpdateLocation extends HttpServlet
                         final Message [] messages = new Message[]{new Message("session_update", json)};
                         channel.publish(messages);
                     }
-                    printWriter.println(reply); // normal JSON output
                 }
                 catch (NumberFormatException nfe)
                 {
@@ -111,7 +115,7 @@ public class GetUpdateLocation extends HttpServlet
                 }
                 catch (AblyException ae)
                 {
-                    printWriter.println(Protocol.getJsonStatus("Ably problem", ae.errorInfo.message));
+                    log.severe("Ably error: " + ae.errorInfo);
                 }
             }
         }
