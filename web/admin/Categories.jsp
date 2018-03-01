@@ -62,6 +62,7 @@ You are not logged in!
 <h1>Categories</h1>
 
 <p>View <a href="/admin/parameters">Parameters</a></p>
+<p>View <a href="/admin/all-timed-questions">Timed Questions</a></p>
 
 <p>Number of categories: <%=categories.size()%></p>
 
