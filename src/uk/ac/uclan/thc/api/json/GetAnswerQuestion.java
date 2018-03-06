@@ -134,9 +134,11 @@ public class GetAnswerQuestion extends HttpServlet
                     }
 
                     final long score;
+                    final long finishTime;
                     {
                         final Session revisedSession = SessionFactory.getSession(sessionUUID);
                         score = revisedSession != null ? revisedSession.getScore() : 0L;
+                        finishTime = revisedSession != null ? revisedSession.getFinishTime() : 0L;
                     }
 
                     // ably push
@@ -154,8 +156,8 @@ public class GetAnswerQuestion extends HttpServlet
                                     "    \"uuid\": \"" + session.getUUID() + "\"," + EOL +
                                     "    \"appID\": \"" + session.getAppID() + "\"," + EOL +
                                     "    \"playerName\": \"" + session.getPlayerName() + "\"," + EOL +
-                                    "    \"score\": " + session.getScore() + "," + EOL +
-                                    "    \"finishTime\": " + session.getFinishTime() + "," + EOL +
+                                    "    \"score\": " + score + "," + EOL +
+                                    "    \"finishTime\": " + finishTime + "," + EOL +
                                     "    \"lat\": " + lat + "," + EOL +
                                     "    \"lng\": " + lng + "" + EOL +
                                     "  }" + EOL;
