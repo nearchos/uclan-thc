@@ -51,9 +51,8 @@ function cookieExists(cname) {
 //Deletes a given cookie.
 function deleteCookie(cname) {
 	var cvalue = "";
-	var expires = "-5";
 	var d = new Date();
-    d.setTime(d.getTime() -1);
+    d.setTime(d.getTime() - 1);
     var expires = "expires="+ d.toUTCString();
     document.cookie = cname + "=" + cvalue + "; " + expires;
 }//end deleteCookie()
