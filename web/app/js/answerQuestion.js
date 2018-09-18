@@ -1,22 +1,14 @@
 /********************************************************************************
- ********************************************************************************
 	File Name: 
 		answerQuestion.js
-	Created by: 
-		Nicos Kasenides (nkasenides@uclan.ac.uk / hfnovember@hotmail.com) 
-		For InSPIRE - UCLan Cyprus
-		June 2016
 	Description:
 		This file contains functions used to answer, skip, update the questions
 		and the score.
-*********************************************************************************		
 *********************************************************************************/
 
-
-
-
-/********************************************************************************/
-//Makes a server request to update the score.
+/**
+ * Makes a request to update the score.
+ */
 function updateScore() {
 	var xhttp = new XMLHttpRequest();
   	xhttp.onreadystatechange = function() {
@@ -26,175 +18,243 @@ function updateScore() {
 			if (statusItem == "OK") {
 				var score = jsonData.score;
 				var scoreLabel = document.getElementById("score");
-				scoreLabel.innerHTML = + score;
+				scoreLabel.innerHTML = score;
+                changeScoreLabelColor();
 			}//end if OK
-			else alert(jsonData.status + " " + jsonData.message);
+			else {
+                var errorMessages = "";
+                for (var i = 0; i < jsonData.errorMessages.length; i++) {
+                    errorMessages += jsonData.errorMessages[i] + "\n";
+                }
+                var errorStr = jsonData.status + ":\n" + errorMessages;
+                alert(errorStr);
+            }
 		}//end if ready
   	};//end if function()
-  	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/score?session=" + sessionID, true);
-  	xhttp.send();	
-	changeScoreLabelColor();
-}//end updateScore();
-/********************************************************************************/
+  	xhttp.open("GET", API_SCORE + "?session=" + sessionID, true);
+  	xhttp.send();
+}
 
-/********************************************************************************/
-//Changes the color in the score label from green to orange to red.
+/**
+ * Changes the color in the score label from green to orange to red.
+ */
 function changeScoreLabelColor() {
 	var score = document.getElementById("score");
 	if (score.innerHTML > 0) score.style.color = "green";
 	else if (score.innerHTML == 0) score.style.color = "#FF5100";
 	else score.style.color = "red";
-}//end changeScoreLabelColor()
-/********************************************************************************/
+}
 
-/********************************************************************************/
-//Makes a server request to update the current question.
+/**
+ * Makes a server request to update the current question.
+ */
 function updateQuestion() {
 	document.getElementById("loader").style.display = "block";
 	document.getElementById("container").style.display = "none";
+
+	resetAllAnswerFields();
+
 	var xhttp = new XMLHttpRequest();
   	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
 			var jsonData = JSON.parse(xhttp.responseText);
 			var statusItem = jsonData.status;
+
 			if (statusItem == "OK") {
+
+                //If quiz all questions answered, redirect:
+			    if (jsonData.currentQuestionIndex >= jsonData.numOfQuestions) {
+                    window.location.href="scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie(COOKIE_PLAYER_NAME); //TODO
+                }
+
+                //Show the container and question:
 				document.getElementById("container").style.display = "inline";
-				var question = jsonData.question;
-				document.getElementById("question").innerHTML = question;
-				if (question.substring(0,5) == "MCQ: ") {
-					//Multiple Choice Question
-					question = question.substring(5, question.length);
-					document.getElementById("question").innerHTML = question;
-					document.getElementById("mcqForm").style.display = "inline";
-					document.getElementById("textForm").style.display = "none";
-				}//end if
-				else {
-					//Text Question
-					document.getElementById("question").innerHTML = question;
-					document.getElementById("mcqForm").style.display = "none";
-					document.getElementById("textForm").style.display = "inline";
-				}//end else
+				document.getElementById("question").innerHTML = jsonData.questionText;
+
+				//Skip option:
+                document.getElementById("skipBtn").style.display = jsonData.canBeSkipped ? "inline" : "none";
+
+				//Decide which form to display:
+                var mcqForm = document.getElementById("mcqForm");
+                var textForm = document.getElementById("textForm");
+                var booleanForm = document.getElementById("booleanForm");
+                var numberForm = document.getElementById("numberForm");
+                var integerForm = document.getElementById("integerForm");
+
+				switch (jsonData.questionType) {
+                    case QUESTION_INTEGER:
+                        integerForm.style.display = "inline";
+                        mcqForm.style.display = "none";
+                        numberForm.style.display = "none";
+                        textForm.style.display = "none";
+                        booleanForm.style.display = "none";
+                        break;
+                    case QUESTION_MCQ:
+                        integerForm.style.display = "none";
+                        mcqForm.style.display = "inline";
+                        numberForm.style.display = "none";
+                        textForm.style.display = "none";
+                        booleanForm.style.display = "none";
+                        break;
+                    case QUESTION_NUMERIC:
+                        integerForm.style.display = "none";
+                        mcqForm.style.display = "none";
+                        numberForm.style.display = "inline";
+                        textForm.style.display = "none";
+                        booleanForm.style.display = "none";
+                        break;
+                    case QUESTION_TEXT:
+                        integerForm.style.display = "none";
+                        mcqForm.style.display = "none";
+                        numberForm.style.display = "none";
+                        textForm.style.display = "inline";
+                        booleanForm.style.display = "none";
+                        break;
+                    case QUESTION_BOOLEAN:
+                        integerForm.style.display = "none";
+                        mcqForm.style.display = "none";
+                        numberForm.style.display = "none";
+                        textForm.style.display = "none";
+                        booleanForm.style.display = "inline";
+                        break;
+                }
 			}//end if OK
 			else {
-				if (statusItem == "Finished session") {
-					document.getElementById("container").style.display = "none";	
-					window.location.href="scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie("THCWebApp-playerName");
-				}//end if finished
-				else createSnackbar(jsonData.status);
+				var errorMessages = "";
+                for (var i = 0; i < jsonData.errorMessages.length; i++) {
+                    errorMessages += jsonData.errorMessages[i] + "\n";
+                }
+                var errorStr = jsonData.status + ":\n" + errorMessages;
+                alert(errorStr);
+                document.location = "selectCategory.html";
 			}//end if not OK
+
+            //Hide the loader and display the page:
 			document.getElementById("loader").style.display = "none";
 			document.getElementById("container").style.display = "block";
-			if (jsonData.isLocationRelevant) document.getElementById("isLocationRelevant").style.display = "inline";
+
+			//Set location bubble:
+			if (jsonData.requiresLocation) document.getElementById("isLocationRelevant").style.display = "inline";
 			else document.getElementById("isLocationRelevant").style.display = "none";
+
+
 		}//end if ready
   	};//end if function()
-  	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/currentQuestion?session=" + sessionID, true);
+  	xhttp.open("GET", API_QUESTION + "?session=" + sessionID, true);
   	xhttp.send();
-}//end updateQuestion();
-/********************************************************************************/
+}
 
-/********************************************************************************/
-//Makes a server request to answer a Multiple Choice Question.
-function answerQuestionMCQ(answer) {
-	updateLocation();
-	var xhttp = new XMLHttpRequest();
-  	xhttp.onreadystatechange = function() {
-		if (xhttp.readyState == 4 && xhttp.status == 200) {
-			var jsonData = JSON.parse(xhttp.responseText);
-			if (jsonData.status == "OK") {
-				document.getElementById("score").innerHTML = jsonData.score;
-				changeScoreLabelColor();
-				if (jsonData.feedback == "correct,unfinished") {
-					createSnackbar('✔ Correct ✔');
-					updateQuestion();	
-				}//end if unfinished
-				else if (jsonData.feedback == "correct,finished") {
-					updateQuestion();	
-					window.location.href="scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie("THCWebApp-playerName");
-				}//end if finished
-				else if (jsonData.feedback == "incorrect") {
-					createSnackbar('✘ Incorrect ✘');
-					updateQuestion();
-				}//end if incorrect
-				else if (jsonData.feedback == "unknown or incorrect location") {
-					createSnackbar('✜ Incorrect Location ✜');
-					updateQuestion();
-				}//end if bad location
-				else alert("Unexpected Problem");
-			}//end if ok
-			else createSnackbar(jsonData.status + " - " + jsonData.message);
-		} //end if ready
-  	}; //end function()
-  	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/answerQuestion?answer=" + answer + "&session=" + sessionID, true);
-  	xhttp.send();
-}//end answerQuestionMCQ()
-/********************************************************************************/
+/**
+ * Answers a question with a given answer.
+ * @param answer
+ */
+function answerQuestion(answer) {
 
-/********************************************************************************/
-//Makes a server request to answer a Text Question.
-function answerQuestionTxt() {
-	updateLocation();
-	var answer = document.getElementById("answer").value;
-	var xhttp = new XMLHttpRequest();
-  	xhttp.onreadystatechange = function() {
-		if (xhttp.readyState == 4 && xhttp.status == 200) {
-			var jsonData = JSON.parse(xhttp.responseText);
-			if (jsonData.status == "OK") {
-				document.getElementById("score").innerHTML = jsonData.score;
-				changeScoreLabelColor();
-				if (jsonData.feedback == "correct,unfinished") {
-					createSnackbar('✔ Correct ✔');
-					updateQuestion();	
-				}//end if unfinished
-				else if (jsonData.feedback == "correct,finished") {
-					updateQuestion();
-					window.location.href="scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie("THCWebApp-playerName");
-				}//end if finished
-				else if (jsonData.feedback == "incorrect") {
-					createSnackbar('✘ Incorrect ✘');
-					updateQuestion();
-				}//end if incorrect
-				else if (jsonData.feedback == "unknown or incorrect location") {
-					createSnackbar('✜ Incorrect Location ✜');
-					updateQuestion();
-				}//end if bad location
-				else alert("Unexpected Problem");
-			}//end if ok
-			else if (jsonData.status == "Invalid or missing parameters") createSnackbar('Your answer cannot be empty');
-			else createSnackbar(jsonData.status + " - " + jsonData.message);
-		}//end if ready
-  	};//end if function()
-  	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/answerQuestion?answer=" + answer + "&session=" + sessionID, true);
-  	xhttp.send();
-	document.getElementById("answer").value = "";
-}//end answerQuestionTxt()
-/********************************************************************************/
+    updateLocation();
 
-/********************************************************************************/
-//Makes a server request to skip the current question.
+    //Make the call:
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+            var jsonData = JSON.parse(xhttp.responseText);
+            if (jsonData.status == "OK") {
+
+                updateScore();
+
+                //If correct & not completed:
+                if (jsonData.correct && !jsonData.completed) {
+                    createSnackbar(jsonData.message);
+                    updateQuestion();
+                }
+
+                //If correct & completed:
+                else if (jsonData.correct && jsonData.completed) {
+                    createSnackbar(jsonData.message);
+                    updateQuestion();
+                    setTimeout(function() { }, 1000);
+                    window.location.href="scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie(COOKIE_PLAYER_NAME);
+                }
+
+                //Not correct, Not completed:
+                else if (!jsonData.correct && !jsonData.completed) {
+                    createSnackbar(jsonData.message);
+                    updateQuestion();
+                }
+
+                //Not correct, completed:
+                else if (!jsonData.correct && jsonData.completed) {
+                    createSnackbar(jsonData.message);
+                    setTimeout(function() { }, 1000);
+                    window.location.href="scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie(COOKIE_PLAYER_NAME);
+                }
+
+                // else if (jsonData.feedback == "unknown or incorrect location") { //TODO LOCATION?
+                // 	createSnackbar('✜ Incorrect Location ✜');
+                // 	updateQuestion();
+                // }//end if bad location
+
+                else alert("Unexpected Problem");
+
+            }//end if ok
+            else {
+                var errorMessages = "";
+                for (var i = 0; i < jsonData.errorMessages.length; i++) {
+                    errorMessages += jsonData.errorMessages[i] + "\n";
+                }
+                var errorStr = jsonData.status + ":\n" + errorMessages;
+                createSnackbar(errorStr);
+                setTimeout(function() { }, 1000);
+                window.location.href="scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie(COOKIE_PLAYER_NAME);
+            }
+        } //end if ready
+    }; //end function()
+    xhttp.open("GET", API_ANSWER + "?answer=" + answer + "&session=" + sessionID, true);
+    xhttp.send();
+}
+
+/**
+ * Makes a server request to skip the current question.
+ */
 function skipQuestion() {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
 			var jsonData = JSON.parse(xhttp.responseText);
 			if (jsonData.status == "OK") {
-				document.getElementById("score").innerHTML = jsonData.score;
-				changeScoreLabelColor();
-				if (jsonData.hasMoreQuestions) updateQuestion();
-				else {
-					updateQuestion();
-					window.location.href="scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie("THCWebApp-playerName");
-				}//end if no more questions
+
+			    updateScore();
+
+				//Check if completed:
+                if (!jsonData.completed) {
+                    updateQuestion();
+                    createSnackbar("Skipped question", 2000);
+                }
+                else {
+                    updateQuestion();
+                    window.location.href="scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie(COOKIE_PLAYER_NAME);
+                }
 			}//end if ok
 			else {
-				updateQuestion();
-				alert(jsonData.status + " - " + jsonData.message);
+                var errorMessages = "";
+                for (var i = 0; i < jsonData.errorMessages.length; i++) {
+                    errorMessages += jsonData.errorMessages[i] + "\n";
+                }
+                var errorStr = jsonData.status + ":\n" + errorMessages;
+                createSnackbar(errorStr);
+                setTimeout(function() { }, 1000);
 			}//end if not OK
 		}//end if ready
 	};//end if function()
-	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/skipQuestion?session=" + sessionID, true);
+	xhttp.open("GET", API_SKIP + "?session=" + sessionID, true);
 	xhttp.send();
-	document.getElementById("answer").value = "";
-	createSnackbar("Skipped question", 2000);
-}//end skipQuestion()
-/********************************************************************************/
+	resetAllAnswerFields();
+}
+
+/**
+ * Resets all text-based fields:
+ */
+function resetAllAnswerFields() {
+    document.getElementById("answerNumber").value = "";
+    document.getElementById("answerInteger").value = "";
+    document.getElementById("answerText").value = "";
+}

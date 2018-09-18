@@ -1,28 +1,21 @@
 <!------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------
 	File Name: 
 		selectCategory.html
-	Created by: 
-		Nicos Kasenides (nkasenides@uclan.ac.uk / hfnovember@hotmail.com) 
-		For InSPIRE - UCLan Cyprus
-		June 2016
 	Description:
 		Allows a user to select a quiz category from a given list.
---------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------->
-
 
 
 <!doctype html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>Select a Category</title>
-<link href="style/thc-style.css" type="text/css" rel="stylesheet"/>
-<link rel="icon" href="images/pirate_android_small.png">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta charset="utf-8">
+    <title>Select a Category</title>
+    <link href="style/thc-style.css" type="text/css" rel="stylesheet"/>
+    <link rel="icon" href="images/pirate_android_small.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
-<script src="js/utilities.js"></script>
+    <script src="js/utilities.js"></script>
 
 </head>
 
@@ -32,91 +25,123 @@
 
 <div id="container">
 
-	<div class="header">
+    <div class="header">
         <ul class="topNav">
-		<img class="topNavImage" src="images/pirate_android_verysmall.png" alt="Code Cyprus Image" />
-   		 <p class="codeCy"> Code Cyprus </p>
-          <li style="float:right"><a href="selectCategory.html">Refresh</a></li>
-          <div class="clearFloat"></div>
+            <img class="topNavImage" src="images/pirate_android_verysmall.png" alt="Code Cyprus Image"/>
+            <p class="codeCy"> Code Cyprus </p>
+            <li style="float:right"><a href="selectCategory.html">Refresh</a></li>
+            <div class="clearFloat"></div>
         </ul>
     </div>
-    
-     <div id="content" align="center">
-    
-    <div class="instructions">
-        <p class="bubble" id="categoriesBubble">First select a treasure to hunt! </p> <div class="clearFloat"></div>
-        <img src="images/pirate_android_small.png" alt="Pirate Image" id="categoriesPirateImage" /><br/>
-    </div><!--instructions-->
-    
-    <hr />
-        
+
+    <div id="content" align="center">
+
+        <div class="instructions">
+            <p class="bubble" id="categoriesBubble">First select a treasure to hunt! </p>
+            <div class="clearFloat"></div>
+            <img src="images/pirate_android_small.png" alt="Pirate Image" id="categoriesPirateImage"/><br/>
+        </div><!--instructions-->
+
+        <hr/>
+
         <ul class="categoryList" id="categoryList"></ul>
-        
-	<hr />
-    
-	<script>
-    
-    var xhttp = new XMLHttpRequest();
-  	xhttp.onreadystatechange = function() {
-        if (xhttp.readyState === 4 && xhttp.status === 200) {
-            var jsonData = JSON.parse(xhttp.responseText);
-            if (jsonData.status == "OK") {
-                var numOfCategories = jsonData.categories.length;
-                const dateTimeNow = (new Date).getTime();
-                console.log("dateTimeNow: " + dateTimeNow);
 
-                for (var i = 0; i < numOfCategories; i++) {
-                    var currentItem = jsonData.categories[i];
-                    //Category is only usable if validFrom < today AND validUntil > today
-                    var validFromDateTime = (new Date(Date.parse(currentItem.validFrom + "+00:00", "yyyy-MM-ddTHH:mm:ssZ"))).getTime();
-                    var validUntilDateTime = (new Date(Date.parse(currentItem.validUntil + "+00:00", "yyyy-MM-ddTHH:mm:ssZ"))).getTime();
+        <hr/>
 
+        <script>
 
-                    // console.log(currentItem.name + " dateTimeNow: " + dateTimeNow);
-                    // console.log(currentItem.name + " validFromDateTime: " + validFromDateTime);
-                    // console.log(currentItem.name + " validUntilDateTime: " + validUntilDateTime);
-                    // console.log(currentItem.name + " since: " + (dateTimeNow - validFromDateTime));
-                    // console.log(currentItem.name + " until: " + (validUntilDateTime - dateTimeNow));
-                    // console.log(currentItem.name + " -> " + ((validFromDateTime <= dateTimeNow) && (dateTimeNow <= validUntilDateTime)));
-                    if ((validFromDateTime <= dateTimeNow) && (dateTimeNow <= validUntilDateTime)) {
-                        //Add to select element
-                        var a = document.createElement("a");
-                        var categoryList = document.getElementById("categoryList");
-                        var newItem = document.createElement("li");
-                        a.textContent = currentItem.name;
-                        a.setAttribute('href', "register.html?cuuid=" + currentItem.uuid + "&cname=" + currentItem.name);
-                        newItem.appendChild(a);
-                        categoryList.appendChild(newItem);
-                    }//end if selectable entry
-                    else if (validFromDateTime > dateTimeNow) {
-                        var newItem = document.createElement("li");
-                        newItem.className += "disabled";
-                        var text = document.createTextNode(currentItem.name);
-                        newItem.appendChild(text);
-                        document.getElementById("categoryList").appendChild(newItem);
-                    }//end if non-selectable entry
-                }//end for
-            } else if (statusItem != "OK") {
-                createSnackbar('! Problem while contacting the server (status code: ' + xhttp.status + ') !');
-            } else {
-                createSnackbar('! Problem while contacting the server (status code: ' + xhttp.status + ') !');
-            }
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
 
-            document.getElementById("loader").style.display = "none";
-            document.getElementById("container").style.display = "block";
-        } else if(xhttp.readyState === 4) {
-            createSnackbar('! Problem while contacting the server (ready state: ' + xhttp.readyState + ', status code: ' + xhttp.status + ') !');
-            document.getElementById("loader").style.display = "none";
-            document.getElementById("container").style.display = "block";
-        }
-  	};
-  	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/categories", true);
-  	xhttp.send();
-    
-   </script>
-   
-   </div> <!--CONTENT-->
-    
+                var displayedCategories = 0;
+                var categoryList = document.getElementById("categoryList");
+
+                if (xhttp.readyState === 4 && xhttp.status === 200) {
+                    var jsonData = JSON.parse(xhttp.responseText);
+                    if (jsonData.status == "OK") {
+                        var numOfCategories = jsonData.treasureHunts.length;
+                        const dateTimeNow = (new Date).getTime();
+
+                        for (var i = 0; i < numOfCategories; i++) {
+
+                            var currentItem = jsonData.treasureHunts[i];
+                            var startsOnTime = currentItem.startsOn;
+                            var endsOnTime = currentItem.endsOn;
+
+                            //DEBUG INFO:
+                            // console.log(currentItem.name + " dateTimeNow: " + dateTimeNow);
+                            // console.log(currentItem.name + " startsOnTime: " + startsOnTime);
+                            // console.log(currentItem.name + " endsOnTime: " + endsOnTime);
+                            // console.log(currentItem.name + " since: " + (dateTimeNow - startsOnTime));
+                            // console.log(currentItem.name + " until: " + (endsOnTime - dateTimeNow));
+                            // console.log(currentItem.name + " -> " + ((startsOnTime <= dateTimeNow) && (dateTimeNow <= endsOnTime)));
+
+                            var isPublic = jsonData.treasureHunts[i].visibility === "PUBLIC";
+
+                            //Only show categories in the list if they are public:
+                            if (isPublic) {
+
+                                displayedCategories++;
+
+                                //Display the category as joinable if its start time is now or later from now and its end time is now or before now:
+                                if ((dateTimeNow >= startsOnTime) && (dateTimeNow <= endsOnTime)) {
+                                    //Add to select element
+                                    var a = document.createElement("a");
+                                    var newItem = document.createElement("li");
+                                    a.textContent = currentItem.name;
+                                    a.setAttribute('href', "register.html?cuuid=" + currentItem.uuid + "&cname=" + currentItem.name);
+                                    newItem.appendChild(a);
+                                    categoryList.appendChild(newItem);
+                                }//end if selectable entry
+
+                                //Display the category as non-joinable if its start time is later than now:
+                                else if (startsOnTime > dateTimeNow) {
+                                    var newItem = document.createElement("li");
+                                    newItem.className += "disabled";
+                                    var text = document.createTextNode(currentItem.name);
+                                    newItem.appendChild(text);
+                                    document.getElementById("categoryList").appendChild(newItem);
+                                }//end if non-selectable entry
+
+                                //Otherwise just show a console message, no need to show the category:
+                                else {
+                                    console.log("Found an expired Treasure hunt: " + currentItem.name);
+                                }
+
+                            }//end if isPublic
+                        }//end for each category
+
+                        //If no categories have been found, show a 'No categories' message:
+                        if (displayedCategories < 1) {
+                            var noCategoriesItem = document.createElement("li");
+                            noCategoriesItem.style.color = "#888";
+                            noCategoriesItem.innerHTML = "<i>No categories</i>";
+                            categoryList.appendChild(noCategoriesItem);
+                        }
+
+                    }
+                    else if (statusItem != "OK") {
+                        createSnackbar('! Problem while fetching the categories (status code: ' + xhttp.status + ') !');
+                    }
+                    else {
+                        createSnackbar('! Problem while contacting the server (status code: ' + xhttp.status + ') !');
+                    }
+
+                    document.getElementById("loader").style.display = "none";
+                    document.getElementById("container").style.display = "block";
+                } else if (xhttp.readyState === 4) {
+                    createSnackbar('! Problem while contacting the server (ready state: ' + xhttp.readyState + ', status code: ' + xhttp.status + ') !');
+                    document.getElementById("loader").style.display = "none";
+                    document.getElementById("container").style.display = "block";
+                }
+            };
+            xhttp.open("GET", API_SELECT_CATEGORY, true);
+            xhttp.send();
+
+        </script>
+
+    </div> <!--CONTENT-->
+
 </div><!--CONTAINER-->
 
 </body>

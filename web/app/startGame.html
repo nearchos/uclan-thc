@@ -1,14 +1,8 @@
 <!------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------
 	File Name: 
 		startGame.html
-	Created by: 
-		Nicos Kasenides (nkasenides@uclan.ac.uk / hfnovember@hotmail.com) 
-		For InSPIRE - UCLan Cyprus
-		June 2016
 	Description:
 		Starts a session with the user's information.
---------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------->
 
 
@@ -28,7 +22,6 @@
 <body>
 
 <script src="js/cookies.js"></script>
-<script src="js/utilities.js"></script>
 
 <div id="loader"></div>
 
@@ -41,29 +34,39 @@
 	var categoryName = fetchGetVariable("categoryName");
 	var playerName = fetchGetVariable("firstPirateName");
 	var playerGender = fetchGetVariable("gender");
-	var appID = "THC-WebApp";
+	const APP_ID = "THC-WebApp";
 
 	var xhttp = new XMLHttpRequest();
   	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
 			var jsonData = JSON.parse(xhttp.responseText);
 			var statusItem = jsonData.status;
+
 			if (statusItem == "OK") {
-				var sessionID = jsonData.sessionUUID;
-				setCookie("THCWebApp-sessionID", sessionID, 365);
-				setCookie("THCWebApp-playerName", playerName, 365); 
-				setCookie("THCWebApp-categoryName", categoryName, 365);
+				var sessionID = jsonData.session;
+				var numOfQuestions = jsonData.numOfQuestions;
+				setCookie(COOKIE_SESSION_ID, sessionID, 365);
+				setCookie(COOKIE_PLAYER_NAME, playerName, 365);
+				setCookie(COOKIE_CATEGORY_NAME, categoryName, 365);
+                setCookie(COOKIE_NUM_OF_QUESTIONS, numOfQuestions, 365);
 				window.location.href = "currentQuestion.html";
 			}//end if OK
 			else {
-				alert(jsonData.status + " - " + jsonData.message);
+			    var errorMessages = "";
+			    for (var i = 0; i < jsonData.errorMessages.length; i++) {
+			        errorMessages += jsonData.errorMessages[i] + "\n";
+                }
+				alert(jsonData.status + ":\n" + errorMessages);
 				window.location.href = "register.html?cuuid=" + categoryUUID + "&cname=" + categoryName;
 			}//end if not OK
+
+            //Hide the loader, display page:
 			document.getElementById("loader").style.display = "none";
 			document.getElementById("container").style.display = "block";
+
 		}//end if ready
   	};//end if function()
-  	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/startQuiz?playerName=" + playerName + "&appID=" + appID + "&categoryUUID=" + categoryUUID + "&gender=" + playerGender, true);
+  	xhttp.open("GET", API_START + "?player=" + playerName + "&app=" + APP_ID + "&treasure-hunt-id=" + categoryUUID + "&gender=" + playerGender, true);
   	xhttp.send();
 
 </script>

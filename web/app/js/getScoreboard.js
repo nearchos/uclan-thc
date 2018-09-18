@@ -1,27 +1,21 @@
 /********************************************************************************
- ********************************************************************************
 	File Name: 
 		getScoreboard.js
-	Created by: 
-		Nicos Kasenides (nkasenides@uclan.ac.uk / hfnovember@hotmail.com) 
-		For InSPIRE - UCLan Cyprus
-		June 2016
 	Description:
 		Contains functions to get scoreboard data for the final (post-finish)
 		and intermediate (pre-finish) scoreboards.
-*********************************************************************************		
 *********************************************************************************/
 
 
-
-
-/********************************************************************************/
-//Makes a server request and dynamically creates the scoreboard for the final scoreboard page.
+/**
+ * Makes a server request and dynamically creates the scoreboard for the final scoreboard page.
+ */
 function getScoreboard() {
 	
-	deleteCookie("THCWebApp-sessionID");
-	deleteCookie("THCWebApp-playerName");
-	deleteCookie("THCWebApp-categoryName");
+	deleteCookie(COOKIE_SESSION_ID);
+	deleteCookie(COOKIE_PLAYER_NAME);
+	deleteCookie(COOKIE_CATEGORY_NAME);
+    deleteCookie(COOKIE_NUM_OF_QUESTIONS);
 	
 	var currentPlayerName = fetchGetVariable("playerName");
 	var currentPlayerRank; var currentPlayerScore;
@@ -35,27 +29,27 @@ function getScoreboard() {
 			var jsonData = JSON.parse(xhttp.responseText);
 			var statusItem = jsonData.status;
 			if (statusItem == "OK") {
-				var data = jsonData.scoreBoard;
+				var data = jsonData.leaderboard;
 				var list = document.getElementById('scoreboardList');
 				for(var i in data) {
-					if (data[i].playerName == currentPlayerName) {
-						currentPlayerRank = data[i].rank;
+					if (data[i].player == currentPlayerName) {
+						currentPlayerRank = Number(i) + 1;
 						currentPlayerScore = data[i].score;
 					}//end if same player
 					var entry = document.createElement('li');
 					var scorebox = document.createElement('div');
 					var playerName = document.createElement('div');
 					var rank = document.createElement('div');
-					var appID = document.createElement('span');
-					appID.innerHTML = data[i].appID;
-					appID.className = "tooltipText";
-					playerName.innerHTML = data[i].playerName;
-					rank.innerHTML = data[i].rank;
-					if (data[i].rank > 11) entry.style.borderTopStyle = "dotted";
-					if (data[i].playerName == currentPlayerName) entry.className += "currentPlayer tooltip";
+					// var appID = document.createElement('span');
+					// appID.innerHTML = data[i].appID;
+					// appID.className = "tooltipText";
+					playerName.innerHTML = data[i].player;
+					rank.innerHTML = Number(i) + 1;
+					if (Number(i) + 1 == 11) entry.style.borderTopStyle = "dotted";
+					if (data[i].player == currentPlayerName) entry.className += "currentPlayer tooltip";
 					else entry.className += "tooltip";
 					var timeFinished = document.createElement('small');
-					timeFinished.innerHTML = "<br>Time since start: " + timestampToTime(data[i].finishTime);
+					timeFinished.innerHTML = "<br>Time since start: " + timestampToTime(data[i].completionTime);
 					var clearfloat = document.createElement('div');
 					scorebox.innerHTML = data[i].score + " Pts";
 					scorebox.className = "scoreBox";
@@ -68,7 +62,7 @@ function getScoreboard() {
 					entry.appendChild(timeFinished);
 					entry.appendChild(scorebox);
 					entry.appendChild(clearfloat);
-					entry.appendChild(appID);
+					// entry.appendChild(appID);
 					list.appendChild(entry);
 				}//end for
 				var rankSuffix = getSuffix(currentPlayerRank);
@@ -79,17 +73,17 @@ function getScoreboard() {
 			document.getElementById("container").style.display = "block";
 		}//end if ready
   	};//end if function()
-  	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/scoreBoard?session=" + sessionID + "&sorted", true);
+  	xhttp.open("GET", API_LEADERBOARD + "?session=" + sessionID + "&sorted", true);
   	xhttp.send();	
-}//end getScoreboard()
-/********************************************************************************/
+}
 
-/********************************************************************************/
-//Makes a server request and dynamically creates the intermediary scoreboard (pre-finish).
+/**
+ * Makes a server request and dynamically creates the scoreboard during the quiz.
+ */
 function getScoreboardAsPopup() {
 	var sessionID;
-	var currentPlayerName = getCookie("THCWebApp-playerName");
-	if (cookieExists("THCWebApp-sessionID")) sessionID = getCookie("THCWebApp-sessionID");
+	var currentPlayerName = getCookie(COOKIE_PLAYER_NAME);
+	if (cookieExists(COOKIE_SESSION_ID)) sessionID = getCookie(COOKIE_SESSION_ID);
 	else document.location.href = "index.html";
 	
 	var xhttp = new XMLHttpRequest();
@@ -98,35 +92,55 @@ function getScoreboardAsPopup() {
 			var jsonData = JSON.parse(xhttp.responseText);
 			var statusItem = jsonData.status;
 			if (statusItem == "OK") {
-				var data = jsonData.scoreBoard;
+				var data = jsonData.leaderboard;
 				var list = document.getElementById('scoreboardList');
+				list.className += "noRadius";
 				while(list.firstChild) list.removeChild(list.firstChild); //Empty the list first (for update)
+
+                var playersRank = 0;
+
 				for(var i in data) {
 					var entry = document.createElement('li');
 					var scorebox = document.createElement('div');
 					var playerName = document.createElement('div');	
 					var rank = document.createElement('div');
-					playerName.innerHTML = data[i].playerName;
-					rank.innerHTML = data[i].rank;
-					if (data[i].rank > 11) entry.style.borderTopStyle = "dotted";
-					if (data[i].playerName == currentPlayerName) entry.className += "currentPlayer";
+					playerName.innerHTML = data[i].player;
+					rank.innerHTML = Number(i) + 1;
+					if (Number(i) + 1 == 11) entry.style.borderTopStyle = "dotted";
+					if (data[i].player == currentPlayerName) {
+					    entry.className += "currentPlayer";
+					    playersRank = Number(i) + 1;
+                    }
 					var clearfloat = document.createElement('div');
 					scorebox.innerHTML = data[i].score + " Pts";
 					scorebox.className = "scoreBox";
 					playerName.className = "playerName";
 					clearfloat.className = "clearFloat";
-					rank.className = "rank";
+					rank.className = "rank rankFix";
 					entry.appendChild(rank);
 					entry.appendChild(playerName);
 					entry.appendChild(scorebox);
 					entry.appendChild(clearfloat);
 					list.appendChild(entry);
 				}//end for
+
+                //Add an additional item showing the player's rank:
+                var playersRankItem = document.createElement("li");
+				playersRankItem.innerHTML = "Your position: " + getSuffix(playersRank);
+				playersRankItem.className += "playerRankingMiniScoreboard";
+                if (playersRank >= 4) playersRankItem.style.backgroundColor = "#FFFFFF";
+                if (playersRank == 1) playersRankItem.style.backgroundColor = "#CCAC00"; //Gold
+                if (playersRank == 2) playersRankItem.style.backgroundColor = "#DDDDDD"; //Silver
+                if (playersRank == 3) playersRankItem.style.backgroundColor = "#cd7f32"; //Bronze
+                if (playersRank < 4) playersRankItem.style.color = "white";
+				list.insertBefore(playersRankItem, list.firstChild);
+
 			}//end if OK
-			else alert(jsonData.status + " " + jsonData.message);
+			else {
+
+			}
 		}//end if ready
   	};//end if function()
-  	xhttp.open("GET", "https://uclan-thc.appspot.com/api/json/secure/scoreBoard?session=" + sessionID + "&sorted", true);
+  	xhttp.open("GET", API_LEADERBOARD + "?session=" + sessionID + "&sorted", true);
   	xhttp.send();	
-}//end getScoreboardAsPopup()
-/********************************************************************************/
+}

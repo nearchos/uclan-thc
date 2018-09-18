@@ -1,14 +1,8 @@
 <!------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------
 	File Name: 
 		currentQuestion.html
-	Created by: 
-		Nicos Kasenides (nkasenides@uclan.ac.uk / hfnovember@hotmail.com) 
-		For InSPIRE - UCLan Cyprus
-		June 2016
 	Description:
 		Displays the current question with a multiple choice or text answer form.
---------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------->
 
 
@@ -18,13 +12,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<script src="js/cookies.js"> </script>
 <title>Treasure Hunt</title>
-<script> document.title = getCookie("THCWebApp-categoryName").split('+').join(' ');</script>
+<script src="js/cookies.js"> </script>
+<script> document.title = getCookie(COOKIE_CATEGORY_NAME).split('+').join(' ');</script>
 <link href="style/thc-style.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" href="images/pirate_android_small.png">
 <script src="js/utilities.js"> </script>
-<script src="js/getScoreboard.js"></script> 
+<script src="js/getScoreboard.js"></script>
 <script src="js/updateLocation.js"></script>
 <script src="js/answerQuestion.js"></script>
 </head>
@@ -43,50 +37,84 @@
           <div class="clearFloat"></div>
         </ul>
     </div>
-    
+
      <ul class="scoreBanner">
        <li style="float:right">
       	<form name="skipForm" id="skipForm">
 			<input id="skipBtn" class="THCButton" name="skipBtn" type="button" value="Skip" onClick="showModal('skipQuestion');" />
 		</form>
       </li>
-      <li style="float:right"><p style="float:left; font-weight:700;"><b>Score:</b></p> <p id="score">0</p><div class="clearFloat"></p></li>
+      <li style="float:right"><p style="float:left; font-weight:700;"><b>Score:</b></p> <p id="score">0</p><div class="clearFloat"></div></li>
       <li style="float:left">
       	   <script>
-				var playerName = getCookie("THCWebApp-playerName");
-				var sessionID = getCookie("THCWebApp-sessionID");
+				var playerName = getCookie(COOKIE_PLAYER_NAME);
+				var sessionID = getCookie(COOKIE_SESSION_ID);
 				document.write("<p id='playerName'> <b>Player: </b><small>" + playerName + "</small></p>");
 			</script>
       </li>
     </ul>
-    
-    	
+
+
     <div class="content" align="center">
-        
+
      <div class="instructions">
      	<div class="bubble">
         <img src="images/pirate_android_small.png" alt="Pirate Image" id="questionsPirateImage" />
         <p id="question"></p><div id="isLocationRelevant"><small>Requires Location!</small></div><div class="clearFloat"></div>
         </div><!--bubble-->
     </div><!--instructions-->
-        
 
-<form name="mcqForm" id="mcqForm">
-	<input id="answerABtn" name="answerABtn" type="button" value="A" class="THCButton MCQ" onclick="answerQuestionMCQ('A')"/>
-    <input id="answerBBtn" name="answerBtn" type="button" value="B" class="THCButton MCQ" onclick="answerQuestionMCQ('B')"/>
-    <input id="answerCBtn" name="answerCBtn" type="button" value="C" class="THCButton MCQ" onclick="answerQuestionMCQ('C')"/>
-    <input id="answerDBtn" name="answerDBtn" type="button" value="D" class="THCButton MCQ" onclick="answerQuestionMCQ('D')"/>
-</form>
 
-<form name="textForm" id="textForm" onsubmit="answerQuestionTxt()" action="currentQuestion.html">
-	<input id="answer"  type="text" name="answer" placeholder="Answer here..." size="30" class="text" required/>
-    <input id="submitBtn" class="THCButton" name="submitBtn" type="button" value="Submit" onClick="answerQuestionTxt();"/>
-</form>
+    <form name="mcqForm" id="mcqForm">
+        <input id="answerABtn" name="answerABtn" type="button" value="A" class="THCButton MCQ" onclick="answerQuestion('A')"/>
+        <input id="answerBBtn" name="answerBtn" type="button" value="B" class="THCButton MCQ" onclick="answerQuestion('B')"/>
+        <input id="answerCBtn" name="answerCBtn" type="button" value="C" class="THCButton MCQ" onclick="answerQuestion('C')"/>
+        <input id="answerDBtn" name="answerDBtn" type="button" value="D" class="THCButton MCQ" onclick="answerQuestion('D')"/>
+    </form>
 
-     	<!-- Scoreboard pop-up -->
+    <form name="textForm" id="textForm" onsubmit="filterAnswer(document.getElementById('answerText'));">
+        <input id="answerText"  type="text" name="answerText" placeholder="Answer here..." size="30" class="text" required/>
+        <input id="submitBtnText" class="THCButton" name="submitBtnText" type="button" value="Submit" onClick="filterAnswer(document.getElementById('answerText'));"/>
+    </form>
+
+    <form name="integerForm" id="integerForm" onsubmit="filterAnswer(document.getElementById('answerInteger'));">
+        <input id="answerInteger" type="number"  name="answerInteger" placeholder="Answer here..." size="30" class="text" pattern="[0-9]" required/>
+        <input id="submitBtnInteger" class="THCButton" name="submitBtnInteger" type="button" value="Submit" onClick="filterAnswer(document.getElementById('answerInteger'));"/>
+    </form>
+
+    <form name="numberForm" id="numberForm" onsubmit="filterAnswer(document.getElementById('answerNumber'));">
+        <input id="answerNumber" type="number"  name="answerNumber" placeholder="Answer here..." size="30" class="text" required/>
+        <input id="submitBtnNumber" class="THCButton" name="submitBtnNumber" type="button" value="Submit" onClick="filterAnswer(document.getElementById('answerNumber'));"/>
+    </form>
+
+    <form name="booleanForm" id="booleanForm">
+        <input id="trueBtn" name="trueBtn" type="button" value="True" class="THCButton MCQ" onClick="answerQuestion(true);" />
+        <input id="falseBtn" name="falseBtn" type="button" value="False" class="THCButton MCQ" onClick="answerQuestion(false);" />
+    </form>
+
+    <script>
+        function filterAnswer(e) {
+            let answer = e.value;
+            if (answer === "" || answer == null || answer === undefined) {
+                createSnackbar("Please provide an answer");
+            }
+            else {
+                //Check the case where we need an integer to be entered, but we get a decimal:
+                if (document.getElementById("integerForm").style.display == "inline") {
+                    if (answer.indexOf(".") > -1) {
+                        createSnackbar("Please provide an integer number. (1, 2, 3...)");
+                        return;
+                    }
+                }
+                answerQuestion(answer);
+            }
+        }
+    </script>
+
+<!-- Scoreboard pop-up -->
 <div id="scoreboardPopup" class="modal">
   <div class="modal-content animate-top card-8">
-    <header class="modalContainer hasBackground"> 
+    <header class="modalContainer hasBackground">
       <span onclick="hideModal('scoreboardPopup');"
       class="closebtn">&times;</span>
       <h2>Scoreboard</h2>
@@ -103,8 +131,8 @@
      	<!-- Skip Question Modal -->
 <div id="skipQuestion" class="modal">
   <div class="modal-content animate-top card-8">
-    <header class="modalContainer hasBackground"> 
-      <span onclick="hideModal('skipQuestion');" 
+    <header class="modalContainer hasBackground">
+      <span onclick="hideModal('skipQuestion');"
       class="closebtn">&times;</span>
       <h2>Skip question?</h2>
     </header>

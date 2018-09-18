@@ -1,27 +1,20 @@
 <!------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------
 	File Name: 
 		register.html
-	Created by: 
-		Nicos Kasenides (nkasenides@uclan.ac.uk / hfnovember@hotmail.com) 
-		For InSPIRE - UCLan Cyprus
-		June 2016
 	Description:
 		Shows a form that allows a user to register a name and e-mail to play.
---------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------->
-
 
 
 <!doctype html>
 <html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<link rel="stylesheet" type="text/css" href="style/thc-style.css">
-<link rel="icon" href="images/pirate_android_small.png">
-<title>Register</title>
-<script type="text/javascript" src="js/utilities.js"> </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="style/thc-style.css">
+    <link rel="icon" href="images/pirate_android_small.png">
+    <title>Register</title>
+    <script type="text/javascript" src="js/utilities.js"></script>
 
 </head>
 
@@ -29,59 +22,60 @@
 
 <div id="container" style="display:block">
 
-	<div class="header">
+    <div class="header">
         <ul class="topNav">
-		<img class="topNavImage" src="images/pirate_android_verysmall.png" alt="Code Cyprus Image" />
-   		 <p class="codeCy"> Code Cyprus </p>
-          <div class="clearFloat"></div>
+            <img class="topNavImage" src="images/pirate_android_verysmall.png" alt="Code Cyprus Image"/>
+            <p class="codeCy"> Code Cyprus </p>
+            <div class="clearFloat"></div>
         </ul>
     </div>
-    
-    <div class="instructions">
-        <img src="images/pirate_android_small.png" alt="Pirate Image" id="registerPirateImage" />
-        <p class="bubble" id="registerBubble"></p> <div class="clearFloat"></div>
-    </div><!--instructions-->
-    
-    <hr />
-    
-    <script>
-		var categorySelectedUUID = fetchGetVariable("cuuid");
-		var categorySelectedName = fetchGetVariable("cname");
-		categorySelectedName = categorySelectedName.split('+').join(' ');
-		document.getElementById('registerBubble').innerHTML = "<p> Ahoy, we are looking for the \"" + categorySelectedName + "\"  treasure. Now tell us your name and e-mail and we are ready to go!</p><p style='color:red'>Make sure you <u>ALLOW</u> Geolocation in your browser!";
-	</script>
 
-	<form name="registerPiratesForm" id="registerPiratesForm" action="startGame.html" method="get">
-    
-	  	<p><input id="firstPirateName" type="text" title="Name can only contain letters, numbers, - and ." name="firstPirateName" pattern="[a-zA-Z0-9.-]{1,20}" placeholder="Name..." maxlength="20" class="text" required></p>
-        
-	  	<p><input id="firstPirateEmail" type="email" title="Email should be in the format example@domain.com" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-z]{2,24}$" name="firstPirateEmail" placeholder="E-Mail..." maxlength="60" class="text" required></p>
-        
+    <div class="instructions">
+        <img src="images/pirate_android_small.png" alt="Pirate Image" id="registerPirateImage"/>
+        <p class="bubble" id="registerBubble"></p>
+        <div class="clearFloat"></div>
+    </div><!--instructions-->
+
+    <hr/>
+
+    <script>
+        var categorySelectedUUID = fetchGetVariable("cuuid");
+        var categorySelectedName = fetchGetVariable("cname");
+        categorySelectedName = categorySelectedName.split('+').join(' ');
+        var registerBubble = document.getElementById('registerBubble');
+        registerBubble.innerHTML = "<p> Ahoy, we are looking for the \"" + categorySelectedName + "\"  treasure. Now tell us your name and e-mail and we are ready to go!</p><p style='color:red'>Make sure you <u>ALLOW</u> Geolocation in your browser!";
+    </script>
+
+    <form name="registerPiratesForm" id="registerPiratesForm" action="startGame.html" method="get">
+
+        <p><input id="firstPirateName" type="text" title="Name can only contain letters, numbers, - and ."
+                  name="firstPirateName" pattern="[a-zA-Z0-9.-]{1,20}" placeholder="Name..." maxlength="20" class="text"
+                  required></p>
+
+        <p><input id="firstPirateEmail" type="email" title="Email should be in the format example@domain.com"
+                  pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-z]{2,24}$" name="firstPirateEmail"
+                  placeholder="E-Mail..." maxlength="60" class="text" required></p>
+
         <p><select id="genderSelect" name="gender" placeholder="Select gender..." required>
-        	<option value="m">Male</option>
+            <option value="m">Male</option>
             <option value="f">Female</option>
             <option value="n">Would rather not say</option>
         </select></p>
-        
+
         <input type="hidden" id="cUUIDField" name="categoryUUID"/>
         <input type="hidden" id="cNameField" name="categoryName"/>
-        
+
         <script>
-			document.getElementById("cUUIDField").value = categorySelectedUUID;
-			document.getElementById("cNameField").value = categorySelectedName;
-		</script> 
-        
-     	<p><input class="THCButton startButton" type="submit" name="submitPirateNames" value="Find the Treasure!"></p>
-        
+            document.getElementById("cUUIDField").value = categorySelectedUUID;
+            document.getElementById("cNameField").value = categorySelectedName;
+        </script>
+
+        <p><input class="THCButton startButton" type="submit" name="submitPirateNames" value="Find the Treasure!"></p>
+
     </form>
-    
-    </div><!--CONTENT-->
-    
-    
-</div><!--CONTAINER-->
-    
-    
-    
+
+</div>
+
 
 </body>
 </html>

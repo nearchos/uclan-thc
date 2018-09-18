@@ -1,22 +1,15 @@
 /********************************************************************************
- ********************************************************************************
-	File Name: 
-		addRemoveSecondPirate.js
-	Created by: 
-		Nicos Kasenides (nkasenides@uclan.ac.uk / hfnovember@hotmail.com) 
-		For InSPIRE - UCLan Cyprus
-		June 2016
-	Description:
-		This file is defunct. It is meant to add or remove elements for adding
-		a second pirate for the quiz. Kept for future reference/use.
-*********************************************************************************		
-*********************************************************************************/
+	 File Name:
+	 	addRemoveSecondPirate.js
+	 Description:
+	 	Contains legacy code (left for future reference) which adds additional
+ 		players to the same team.
+ *********************************************************************************/
 
 
-
-
-/********************************************************************************/
-//Adds or removes elements from the registration form for the second pirate.
+/**
+ * Adds or removes elements from the registration form for the second pirate.
+ */
 function addRemoveSecondPirate() {
 	var secondPirateDiv = document.getElementById("secondPirate");
 	var secondPirateBtn = document.getElementById("addRemoveSecondPirateBtn");
@@ -35,5 +28,4 @@ function addRemoveSecondPirate() {
 		secondPirateName.disabled = true;
 		secondPirateBtn.textContent = "Add Second Pirate";
 	}//end if was on
-}//end addRemoveSecondPirate()
-/********************************************************************************/
+}

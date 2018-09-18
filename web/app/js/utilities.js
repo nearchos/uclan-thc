@@ -1,29 +1,41 @@
 /********************************************************************************
- ********************************************************************************
 	File Name: 
 		utilities.js
-	Created by: 
-		Nicos Kasenides (nkasenides@uclan.ac.uk / hfnovember@hotmail.com) 
-		For InSPIRE - UCLan Cyprus
-		June 2016
 	Description:
 		Contains various utility functions used to correctly run the application.
-*********************************************************************************		
 *********************************************************************************/
 
+//API Page URLs:
+const API_BASE_URL = "https://codecyprus.org/th/api/";
+const API_SELECT_CATEGORY = API_BASE_URL + "list";
+const API_START = API_BASE_URL + "start";
+const API_QUESTION = API_BASE_URL + "question";
+const API_ANSWER = API_BASE_URL + "answer";
+const API_SKIP = API_BASE_URL + "skip";
+const API_SCORE = API_BASE_URL + "score";
+const API_LEADERBOARD = API_BASE_URL + "leaderboard";
+const API_LOCATION = API_BASE_URL + "location";
 
+//Question Types:
+const QUESTION_BOOLEAN = "BOOLEAN";
+const QUESTION_INTEGER = "INTEGER";
+const QUESTION_NUMERIC = "NUMERIC";
+const QUESTION_MCQ = "MCQ";
+const QUESTION_TEXT = "TEXT";
 
-
-/********************************************************************************/
-//Checks if the text answer field is empty. Returns false if empty, true if filled.
+/**
+ * Checks if the text answer field is empty. Returns false if empty, true if filled.
+ * @returns {boolean}
+ */
 function validateAnswerField() {
-	if (document.getElementById('answer').value != "") return true;
-	else return false;	
-}//end validateAnswerField()
-/********************************************************************************/
+	return document.getElementById('answer').value != "";
+}
 
-/********************************************************************************/
-//Retrieves a GET variable from the current URL.
+/**
+ * Retrieves a GET variable from the current URL.
+ * @param varName
+ * @returns {*} string?
+ */
 function fetchGetVariable(varName) {
 	var $_GET = {};
 	if(document.location.toString().indexOf('?') !== -1) {
@@ -39,13 +51,13 @@ function fetchGetVariable(varName) {
     	}//end for
 	}//end if
 	return ($_GET[varName]);
-}//end fetchGetVariable()
-/********************************************************************************/
+}
 
-/********************************************************************************/
-//Creates a snackbar with a given message, duration and action and displays it.
-//Example Usage:     
-//   <button id="mySnackbar" onClick="createSnackbar('Text');"> Display Snackbar </button>
+/**
+ * Creates a snackbar with a given message, duration and action and displays it.
+ * Example Usage:
+ * <button id="mySnackbar" onClick="createSnackbar('Text');"> Display Snackbar </button>
+ */
 var createSnackbar = (function() {
   var previous = null;
   return function(message, time, actionText, action) {
@@ -85,24 +97,27 @@ var createSnackbar = (function() {
   };//end function
 })();//end createSnackbar()
 
-/********************************************************************************/
-
-/********************************************************************************/
-//Displays a modal with a given ID.
+/**
+ * Displays a modal with a given ID.
+ * @param name
+ */
 function showModal(name) {
 	document.getElementById(name).style.display='block'
-}//end showModal()
-/********************************************************************************/
+}
 
-/********************************************************************************/
-//Hides a modal with a given ID.
+/**
+ * Hides a modal with a given ID.
+ * @param name
+ */
 function hideModal(name) {
 	document.getElementById(name).style.display='none'
-}//end hideModal()
-/********************************************************************************/
+}
 
-/********************************************************************************/
-//Converts a UNIX timestamp to a time in HH:MM:SS:ms. Returns string.
+/**
+ * Converts a UNIX timestamp to a time in HH:MM:SS:ms. Returns string.
+ * @param finishTime
+ * @returns {string|*}
+ */
 function timestampToTime(finishTime) {
 	var fts;
 	var milliseconds = finishTime % 1000;
@@ -118,25 +133,26 @@ function timestampToTime(finishTime) {
 	: hoursS + ":" + minutesS + ":" + secondsS + "." + millisecondsS;
 	
 	return fts;
-}//end timestampToTime()
-/********************************************************************************/
+}
 
-/********************************************************************************/
-//Returns a suffix according to a number (e.g "1st" if 1 or "2nd" if 2.)
+/**
+ * Returns a suffix according to a number (e.g "1st" if 1 or "2nd" if 2.)
+ * @param i
+ * @returns {string}
+ */
 function getSuffix(i) {
     var j = i % 10, k = i % 100;
     if (j == 1 && k != 11) return i + "st";
     if (j == 2 && k != 12) return i + "nd";
     if (j == 3 && k != 13) return i + "rd";
     return i + "th";	
-}//end getSuffix()
-/********************************************************************************/
+}
 
-/********************************************************************************/
-//Detects if a device is an Android and displays a Google Play badge on index page
+/**
+ * Detects if a device is an Android and displays a Google Play badge on index page
+ */
 function isAndroid() {
 	var ua = navigator.userAgent.toLowerCase();
 	var isAndroid = ua.indexOf("android") > -1;
 	if(isAndroid) document.getElementById("gappsBadge").style.display = "block";
-}//end isAndroid
-/********************************************************************************/
+}
