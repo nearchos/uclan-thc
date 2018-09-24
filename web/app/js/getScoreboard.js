@@ -11,6 +11,8 @@
  * Makes a server request and dynamically creates the scoreboard for the final scoreboard page.
  */
 function getScoreboard() {
+
+    var SESSION_ID = getCookie(COOKIE_SESSION_ID);
 	
 	deleteCookie(COOKIE_SESSION_ID);
 	deleteCookie(COOKIE_PLAYER_NAME);
@@ -22,6 +24,8 @@ function getScoreboard() {
 	
 	document.getElementById("loader").style.display = "block";
 	document.getElementById("container").style.display = "none";
+
+	var currentPlayerCompletion = false;
 	
 	var xhttp = new XMLHttpRequest();
   	xhttp.onreadystatechange = function() {
@@ -35,6 +39,7 @@ function getScoreboard() {
 					if (data[i].player == currentPlayerName) {
 						currentPlayerRank = Number(i) + 1;
 						currentPlayerScore = data[i].score;
+						currentPlayerCompletion = (data[i].completionTime > 0);
 					}//end if same player
 					var entry = document.createElement('li');
 					var scorebox = document.createElement('div');
@@ -67,6 +72,28 @@ function getScoreboard() {
 				}//end for
 				var rankSuffix = getSuffix(currentPlayerRank);
 				document.getElementById("message").innerHTML = "You scored " + currentPlayerScore + " points and ranked " + rankSuffix + ".";
+
+				//Show reward:
+                var qrCode = document.getElementById("qrCode");
+                if (!currentPlayerCompletion) {
+                    qrCode.innerHTML = "<b>You must attempt all questions first.</b>";
+                    qrCode.style.display = "block";
+                }
+                else if (currentPlayerScore < 30) {
+                    qrCode.innerHTML = "<b>You have not answered enough questions correctly.</b>";
+                    qrCode.style.display = "block";
+                }
+                else {
+                    if (SESSION_ID == null || SESSION_ID === undefined || SESSION_ID.length < 1) {
+                        qrCode.innerHTML = "<b>Failed to get QR Code for reward.</b>";
+                        qrCode.style.display = "block";
+                    }
+                    else {
+                        qrCode.innerHTML = "<img src=\"https://api.qrserver.com/v1/create-qr-code/?data=" + SESSION_ID + "&amp;size=200x200\" alt=\"\" title=\"\" /><p>Scan to claim your reward!</p>";
+                        qrCode.style.display = "block";
+                    }
+                }
+
 			}//end if OK
 			else alert(jsonData.status + " " + jsonData.message);
 			document.getElementById("loader").style.display = "none";
