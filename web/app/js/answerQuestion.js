@@ -150,66 +150,77 @@ function updateQuestion() {
  */
 function answerQuestion(answer) {
 
-    updateLocation();
+    //Displays a message when the user attempts to answer a question with no internet connection:
+    if (!navigator.onLine) {
+        createSnackbar("Connection error - Please make sure you have an internet connection");
+    }
+    else {
 
-    //Make the call:
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (xhttp.readyState == 4 && xhttp.status == 200) {
-            var jsonData = JSON.parse(xhttp.responseText);
-            if (jsonData.status == "OK") {
+        //Update the location first:
+        updateLocation();
 
-                updateScore();
+        //Make the call to answer question:
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var jsonData = JSON.parse(xhttp.responseText);
+                if (jsonData.status == "OK") {
 
-                //If correct & not completed:
-                if (jsonData.correct && !jsonData.completed) {
-                    createSnackbar(jsonData.message);
-                    updateQuestion();
+                    updateScore();
+
+                    //If correct & not completed:
+                    if (jsonData.correct && !jsonData.completed) {
+                        createSnackbar(jsonData.message);
+                        updateQuestion();
+                    }
+
+                    //If correct & completed:
+                    else if (jsonData.correct && jsonData.completed) {
+                        createSnackbar(jsonData.message);
+                        updateQuestion();
+                        setTimeout(function () {
+                        }, 1000);
+                        window.location.href = "scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie(COOKIE_PLAYER_NAME);
+                    }
+
+                    //Not correct, Not completed:
+                    else if (!jsonData.correct && !jsonData.completed) {
+                        createSnackbar(jsonData.message);
+                        updateQuestion();
+                    }
+
+                    //Not correct, completed:
+                    else if (!jsonData.correct && jsonData.completed) {
+                        createSnackbar(jsonData.message);
+                        setTimeout(function () {
+                        }, 1000);
+                        window.location.href = "scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie(COOKIE_PLAYER_NAME);
+                    }
+
+                    // else if (jsonData.feedback == "unknown or incorrect location") { //TODO LOCATION?
+                    // 	createSnackbar('✜ Incorrect Location ✜');
+                    // 	updateQuestion();
+                    // }//end if bad location
+
+                    else alert("Unexpected Problem");
+
+                }//end if ok
+                else {
+                    var errorMessages = "";
+                    for (var i = 0; i < jsonData.errorMessages.length; i++) {
+                        errorMessages += jsonData.errorMessages[i] + "\n";
+                    }
+                    var errorStr = jsonData.status + ":\n" + errorMessages;
+                    createSnackbar(errorStr);
+                    setTimeout(function () {
+                    }, 1000);
+                    window.location.href = "scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie(COOKIE_PLAYER_NAME);
                 }
-
-                //If correct & completed:
-                else if (jsonData.correct && jsonData.completed) {
-                    createSnackbar(jsonData.message);
-                    updateQuestion();
-                    setTimeout(function() { }, 1000);
-                    window.location.href="scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie(COOKIE_PLAYER_NAME);
-                }
-
-                //Not correct, Not completed:
-                else if (!jsonData.correct && !jsonData.completed) {
-                    createSnackbar(jsonData.message);
-                    updateQuestion();
-                }
-
-                //Not correct, completed:
-                else if (!jsonData.correct && jsonData.completed) {
-                    createSnackbar(jsonData.message);
-                    setTimeout(function() { }, 1000);
-                    window.location.href="scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie(COOKIE_PLAYER_NAME);
-                }
-
-                // else if (jsonData.feedback == "unknown or incorrect location") { //TODO LOCATION?
-                // 	createSnackbar('✜ Incorrect Location ✜');
-                // 	updateQuestion();
-                // }//end if bad location
-
-                else alert("Unexpected Problem");
-
-            }//end if ok
-            else {
-                var errorMessages = "";
-                for (var i = 0; i < jsonData.errorMessages.length; i++) {
-                    errorMessages += jsonData.errorMessages[i] + "\n";
-                }
-                var errorStr = jsonData.status + ":\n" + errorMessages;
-                createSnackbar(errorStr);
-                setTimeout(function() { }, 1000);
-                window.location.href="scoreboard.html?sessionID=" + sessionID + "&playerName=" + getCookie(COOKIE_PLAYER_NAME);
-            }
-        } //end if ready
-    }; //end function()
-    xhttp.open("GET", API_ANSWER + "?answer=" + answer + "&session=" + sessionID, true);
-    xhttp.send();
+            } //end if ready
+        }; //end function()
+        xhttp.open("GET", API_ANSWER + "?answer=" + answer + "&session=" + sessionID, true);
+        xhttp.send();
+    }
 }
 
 /**
